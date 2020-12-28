@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScheduleFragment">
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spCorpus"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toStartOf="@+id/spGrade"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spWeekday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/spLetter"
+        app:layout_constraintStart_toStartOf="@+id/spCorpus"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spGrade"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toStartOf="@+id/spLetter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/spCorpus"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spLetter"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/spGrade"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Корпус"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/spCorpus"
+        app:layout_constraintEnd_toEndOf="@+id/spCorpus"
+        app:layout_constraintStart_toStartOf="@+id/spCorpus" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Класс"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/spGrade"
+        app:layout_constraintEnd_toEndOf="@+id/spGrade"
+        app:layout_constraintStart_toStartOf="@+id/spGrade" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Буква"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/spLetter"
+        app:layout_constraintEnd_toEndOf="@+id/spLetter"
+        app:layout_constraintStart_toStartOf="@+id/spLetter" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="День недели"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/spLetter"
+        app:layout_constraintStart_toStartOf="@+id/spCorpus"
+        app:layout_constraintTop_toBottomOf="@+id/spGrade" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSchedule"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnShowSchedule"
+        tools:listitem="@layout/rv_schedule_item" />
+
+    <Button
+        android:id="@+id/btnShowSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Показать расписание"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spWeekday" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

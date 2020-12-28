@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="projects_news_image_height">115dp</dimen>
+    <dimen name="projects_news_image_width">115dp</dimen>
+    <dimen name="projects_news_title_text_size">20sp</dimen>
+    <dimen name="projects_news_anounce_text_size">15sp</dimen>
+    <dimen name="projects_news_published_at_text_size">20sp</dimen>
+    <dimen name="recycler_loading_view_height">20sp</dimen>
+</resources>
