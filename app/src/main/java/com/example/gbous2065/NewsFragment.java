@@ -241,7 +241,7 @@ public class NewsFragment extends Fragment implements INewsListener, View.OnClic
         List<News> filtered_search_list = new ArrayList<>();
 
         for (News item : list) {
-            if(item.getName().toLowerCase().contains(searchInput)){
+            if(item.getName().toLowerCase().contains(searchInput.toLowerCase())){
                 filtered_search_list.add(item);
             }
         }

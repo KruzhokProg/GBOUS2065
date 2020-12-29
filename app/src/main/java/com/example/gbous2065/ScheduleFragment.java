@@ -37,8 +37,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -298,6 +300,27 @@ public class ScheduleFragment extends Fragment {
                                 weekdays.add("Четверг");
                                 weekdays.add("Пятница");
                                 spWeekday.attachDataSource(weekdays);
+                                SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                                Date d = new Date();
+                                String dayOfTheWeek = sdf.format(d);
+
+                                switch (dayOfTheWeek){
+                                    case "понедельник":
+                                        spWeekday.setSelectedIndex(0);
+                                        break;
+                                    case "вторник":
+                                        spWeekday.setSelectedIndex(1);
+                                        break;
+                                    case "среда":
+                                        spWeekday.setSelectedIndex(2);
+                                        break;
+                                    case "четверг":
+                                        spWeekday.setSelectedIndex(3);
+                                        break;
+                                    case "пятница":
+                                        spWeekday.setSelectedIndex(4);
+                                        break;
+                                }
 
                                 List<String> grades = new ArrayList<>();
 
@@ -369,7 +392,7 @@ public class ScheduleFragment extends Fragment {
                     public void run() {
                         ShowSchedule();
                     }
-                }, 2000
+                }, 2500
         );
 
         return view;
