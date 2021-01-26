@@ -86,6 +86,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MenuFragment()).commit();
                 toolbar.setTitle("Меню столовой");
                 break;
+            case R.id.nav_contacts:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ContactFragment()).commit();
+                toolbar.setTitle("Контакты");
+                break;
             case R.id.nav_dark_mode:
                 item.setActionView(R.layout.theme_switch);
                 Switch themeSwitch = item.getActionView().findViewById(R.id.action_switch);
