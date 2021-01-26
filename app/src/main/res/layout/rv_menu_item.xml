@@ -11,7 +11,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardBackgroundColor="@color/cv"
+        app:cardBackgroundColor="?attr/cardMenuItem"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="10dp">
 
@@ -41,6 +41,7 @@
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="?attr/titleRvItemColor"
                 app:layout_constraintEnd_toEndOf="@+id/imgv_preview"
                 app:layout_constraintStart_toStartOf="@+id/imgv_preview"
                 app:layout_constraintTop_toBottomOf="@+id/imgv_preview" />

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,12 +62,14 @@ public class ScheduleFragment extends Fragment {
     List<Schedule> schedules;
     ScheduleAdapter adapter;
     List<LessonInfo> out;
+    ProgressBar pb;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_schedule_fragment, container, false);
 
+        pb = view.findViewById(R.id.progress_bar_schedule);
         spCorpus = view.findViewById(R.id.spCorpus);
         spGrade = view.findViewById(R.id.spGrade);
         spLetter = view.findViewById(R.id.spLetter);
@@ -417,6 +420,7 @@ public class ScheduleFragment extends Fragment {
             }
             if(isFound == true) break;
         }
+        pb.setVisibility(View.INVISIBLE);
         adapter.notifyDataSetChanged();
     }
 }

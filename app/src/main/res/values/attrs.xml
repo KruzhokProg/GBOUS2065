@@ -22,5 +22,10 @@
         <attr name="buttonShowSchedule" format="color"/>
         <attr name="spinnerBackColor" format="color"/>
         <attr name="spinnerTextColor" format="color"/>
+        <attr name="pbColorSchedule" format="color"/>
+        <attr name="cardMenuItem" format="color"/>
+        <attr name="cardMenuDetail" format="color"/>
+        <attr name="btnDownloadPdf" format="color"/>
+        <attr name="textTitleMenuDetail" format="color"/>
     </declare-styleable>
 </resources>

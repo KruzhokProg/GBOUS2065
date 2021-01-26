@@ -34,6 +34,7 @@
         <item name="menu_item_selected_text_color">#F9BA32</item>
 
         <item name="pbColor">#1E656D</item>
+        <item name="pbColorSchedule">#F1F3CE</item>
 
         <item name="floatButtonImageColor">@color/white</item>
         <item name="newsDetailTitle">#ff5c33</item>
@@ -41,6 +42,13 @@
         <item name="buttonShowSchedule">@color/white</item>
         <item name="spinnerBackColor">@color/white</item>
         <item name="spinnerTextColor">#00293C</item>
+
+        <item name="cardMenuItem">#F1F3CE</item>
+        <item name="cardMenuDetail">#F1F3CE</item>
+
+        <item name="btnDownloadPdf">@color/white</item>
+
+        <item name="textTitleMenuDetail">#00293C</item>
     </style>
 
     <style name="DarkTheme.GBOUS2065" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -60,6 +68,7 @@
 <!--    color of humburger    -->
         <item name="colorControlNormal">#fff</item>
         <item name="pbColor">#F1F3CE</item>
+        <item name="pbColorSchedule">#1E656D</item>
 
         <item name="floatButtonImageColor">#00293C</item>
         <item name="newsDetailTitle">#ff805B</item>
@@ -67,6 +76,13 @@
         <item name="buttonShowSchedule">#00293C</item>
         <item name="spinnerBackColor">#00293C</item>
         <item name="spinnerTextColor">#F1F3CE</item>
+
+        <item name="cardMenuItem">#1E656D</item>
+        <item name="cardMenuDetail">#1E656D</item>
+
+        <item name="btnDownloadPdf">#00293C</item>
+
+        <item name="textTitleMenuDetail">#F1F3CE</item>
     </style>
 
 

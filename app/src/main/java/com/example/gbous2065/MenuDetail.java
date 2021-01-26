@@ -1,7 +1,9 @@
 package com.example.gbous2065;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -42,6 +44,16 @@ public class MenuDetail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(loadState() == true){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            setTheme(R.style.DarkTheme_GBOUS2065);
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            setTheme(R.style.Theme_GBOUS2065);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_detail);
 
@@ -176,5 +188,11 @@ public class MenuDetail extends AppCompatActivity {
                 Log.d("error", t.getMessage());
             }
         });
+    }
+
+    private  Boolean loadState(){
+        SharedPreferences sharedPreferences = getSharedPreferences("nightMode", MODE_PRIVATE);
+        Boolean state = sharedPreferences.getBoolean("nightMode", false);
+        return state;
     }
 }

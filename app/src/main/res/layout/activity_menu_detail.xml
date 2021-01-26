@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuDetail">
+    tools:context=".MenuDetail"
+    android:background="?attr/cardMenuDetail">
 
     <TextView
         android:id="@+id/tvPage"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="1/2 страница"
+        android:textColor="?attr/textTitleMenuDetail"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -24,7 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,22 +59,25 @@
         android:id="@+id/btnDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="Скачать pdf файл"
+        android:textColor="?attr/btnDownloadPdf"
         app:layout_constraintEnd_toEndOf="@+id/imgvMenuDetail"
         app:layout_constraintStart_toStartOf="@+id/imgvMenuDetail"
-        app:layout_constraintTop_toBottomOf="@+id/imgvMenuDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/imgvMenuDetail"
+        android:backgroundTint="?attr/floatingButtonColor"/>
 
     <ImageView
         android:id="@+id/zoomLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:background="#20000000"
+        android:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="@id/imgvMenuDetail"
         app:layout_constraintEnd_toEndOf="@+id/imgvMenuDetail"
         app:layout_constraintStart_toStartOf="@+id/imgvMenuDetail"
         app:layout_constraintTop_toBottomOf="@+id/tvPage"
-        app:srcCompat="@drawable/icon_zoom_touch"
-        android:elevation="2dp"
-        android:background="#20000000"/>
+        app:srcCompat="@drawable/icon_zoom_touch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

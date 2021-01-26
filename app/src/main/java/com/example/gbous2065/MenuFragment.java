@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,12 +38,14 @@ public class MenuFragment extends Fragment implements IMenuListener {
     GridLayoutManager gridLayoutManager;
     RecyclerView rvMenu;
     List<File> rendered_data;
+    ProgressBar progress_bar_menu;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_menu_fragment, container, false);
 
+        progress_bar_menu = view.findViewById(R.id.progress_bar_menu);
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rvMenu = view.findViewById(R.id.rvMenu);
         menuAdapter = new MenuAdapter(getContext(), this);
@@ -111,6 +114,7 @@ public class MenuFragment extends Fragment implements IMenuListener {
                     });
                 }
 
+                progress_bar_menu.setVisibility(View.INVISIBLE);
             }
 
             @Override
