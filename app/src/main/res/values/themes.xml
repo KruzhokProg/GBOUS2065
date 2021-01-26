@@ -1,16 +1,73 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GBOUS2065" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.GBOUS2065" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
 <!--        <item name="colorPrimary">@color/purple_500</item>-->
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+<!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
+<!--        <item name="colorOnPrimary">@color/white</item>-->
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/teal_200</item>-->
+<!--        <item name="colorSecondaryVariant">@color/teal_700</item>-->
+<!--        <item name="colorOnSecondary">@color/black</item>-->
         <!-- Status bar color. -->
         <!-- <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item> -->
         <!-- Customize your theme here. -->
+        <item name="navColor">#FFF</item>
+        <item name="dateRvItemColor">#00293C</item>
+        <item name="anounceRvItemColor">#00293C</item>
+        <!-- океан -->
+        <item name="titleRvItemColor">#00293C</item>
+        <!-- волна -->
+        <item name="cardBackgroundRvItem">#F1F3CE</item>
+        <item name="appBarLayoutBackground">#FFF</item>
+        <!-- морская пена -->
+        <item name="rvBackground">#FFF</item>
+        <item name="drawerItemColor">#232122</item>
+        <item name="drawerSelectedItemColor">#ff5c33</item>
+        <item name="toolbarBackground">#FFF</item>
+        <item name="toolbarTitleTextColor">#000</item>
+        <item name="colorControlNormal">#000</item>
+        <!-- глубокая вода -->
+        <item name="floatingButtonColor">#1E656D</item>
+
+        <item name="menu_item_selected_background" state="checked">#F9BA32</item>
+        <item name="menu_item_selected_text_color">#F9BA32</item>
+
+        <item name="pbColor">#1E656D</item>
+
+        <item name="floatButtonImageColor">@color/white</item>
+        <item name="newsDetailTitle">#ff5c33</item>
+
+        <item name="buttonShowSchedule">@color/white</item>
+        <item name="spinnerBackColor">@color/white</item>
+        <item name="spinnerTextColor">#00293C</item>
     </style>
+
+    <style name="DarkTheme.GBOUS2065" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="navColor">#1E656D</item>
+        <item name="dateRvItemColor">#F1F3CE</item>
+        <item name="titleRvItemColor">#F1F3CE</item>
+        <item name="anounceRvItemColor">#F1F3CE</item>
+        <item name="cardBackgroundRvItem">#1E656D</item>
+        <item name="appBarLayoutBackground">#00293C</item>
+        <item name="rvBackground">#00293C</item>
+        <item name="drawerItemColor">#fff</item>
+        <item name="drawerSelectedItemColor">#ff5c33</item>
+        <item name="toolbarBackground">#00293C</item>
+        <item name="toolbarTitleTextColor">#fff</item>
+
+        <item name="floatingButtonColor">#F1F3CE</item>
+<!--    color of humburger    -->
+        <item name="colorControlNormal">#fff</item>
+        <item name="pbColor">#F1F3CE</item>
+
+        <item name="floatButtonImageColor">#00293C</item>
+        <item name="newsDetailTitle">#ff805B</item>
+
+        <item name="buttonShowSchedule">#00293C</item>
+        <item name="spinnerBackColor">#00293C</item>
+        <item name="spinnerTextColor">#F1F3CE</item>
+    </style>
+
+
 </resources>

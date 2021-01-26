@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ds">
+        <attr name="navColor" format="color"/>
+        <attr name="dateRvItemColor" format="color"/>
+        <attr name="titleRvItemColor" format="color"/>
+        <attr name="anounceRvItemColor" format="color"/>
+        <attr name="cardBackgroundRvItem" format="color"/>
+        <attr name="appBarLayoutBackground" format="color"/>
+        <attr name="rvBackground" format="color"/>
+        <attr name="drawerItemTextColor" format="color"/>
+        <attr name="drawerItemColor" format="color"/>
+        <attr name="drawerSelectedItemColor" format="color"/>
+        <attr name="toolbarBackground" format="color"/>
+        <attr name="toolbarTitleTextColor" format="color"/>
+        <attr name="floatingButtonColor" format="color"/>
+        <attr name="pbColor" format="color"/>
+        <attr name="menu_item_selected_background" format="color"/>
+        <attr name="menu_item_selected_text_color" format="color"/>
+        <attr name="floatButtonImageColor" format="color"/>
+        <attr name="newsDetailTitle" format="color"/>
+        <attr name="buttonShowSchedule" format="color"/>
+        <attr name="spinnerBackColor" format="color"/>
+        <attr name="spinnerTextColor" format="color"/>
+    </declare-styleable>
+</resources>

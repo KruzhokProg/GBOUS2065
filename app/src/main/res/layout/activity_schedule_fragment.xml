@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScheduleFragment">
+    tools:context=".ScheduleFragment"
+    android:background="?attr/rvBackground">
 
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spCorpus"
@@ -14,16 +15,10 @@
         app:layout_constraintEnd_toStartOf="@+id/spGrade"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spWeekday"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/spLetter"
-        app:layout_constraintStart_toStartOf="@+id/spCorpus"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="?attr/spinnerBackColor"
+        app:textTint="?attr/titleRvItemColor"
+        app:arrowTint="?attr/titleRvItemColor" />
 
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spGrade"
@@ -33,7 +28,11 @@
         app:layout_constraintEnd_toStartOf="@+id/spLetter"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/spCorpus"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="?attr/spinnerBackColor"
+        android:textColor="?attr/titleRvItemColor"
+        app:textTint="?attr/titleRvItemColor"
+        app:arrowTint="?attr/titleRvItemColor"/>
 
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spLetter"
@@ -43,7 +42,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/spGrade"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="?attr/spinnerBackColor"
+        android:textColor="?attr/spinnerTextColor"
+        app:textTint="?attr/titleRvItemColor"
+        app:arrowTint="?attr/titleRvItemColor"/>
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spWeekday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/spLetter"
+        app:layout_constraintStart_toStartOf="@+id/spCorpus"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        android:backgroundTint="?attr/spinnerBackColor"
+        android:textColor="?attr/spinnerTextColor"
+        app:textTint="?attr/titleRvItemColor"
+        app:arrowTint="?attr/titleRvItemColor"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -51,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:text="Корпус"
+        android:textColor="?attr/spinnerTextColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/spCorpus"
         app:layout_constraintEnd_toEndOf="@+id/spCorpus"
@@ -63,6 +80,7 @@
         android:layout_marginBottom="5dp"
         android:text="Класс"
         android:textSize="18sp"
+        android:textColor="?attr/spinnerTextColor"
         app:layout_constraintBottom_toTopOf="@+id/spGrade"
         app:layout_constraintEnd_toEndOf="@+id/spGrade"
         app:layout_constraintStart_toStartOf="@+id/spGrade" />
@@ -74,6 +92,7 @@
         android:layout_marginBottom="5dp"
         android:text="Буква"
         android:textSize="18sp"
+        android:textColor="?attr/titleRvItemColor"
         app:layout_constraintBottom_toTopOf="@+id/spLetter"
         app:layout_constraintEnd_toEndOf="@+id/spLetter"
         app:layout_constraintStart_toStartOf="@+id/spLetter" />
@@ -85,33 +104,52 @@
         android:layout_marginTop="20dp"
         android:text="День недели"
         android:textSize="18sp"
+        android:textColor="?attr/titleRvItemColor"
         app:layout_constraintEnd_toEndOf="@+id/spLetter"
         app:layout_constraintStart_toStartOf="@+id/spCorpus"
         app:layout_constraintTop_toBottomOf="@+id/spGrade" />
 
+    <Button
+        android:id="@+id/btnShowSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:text="Показать расписание"
+        android:textColor="?attr/buttonShowSchedule"
+        android:backgroundTint="?attr/floatingButtonColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spWeekday" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSchedule"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="320dp"
+        android:layout_marginEnd="10dp"
+        android:background="?attr/cardBackgroundRvItem"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnShowSchedule"
         tools:listitem="@layout/rv_schedule_item" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rvSchedule"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="400dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/btnShowSchedule"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        tools:listitem="@layout/rv_schedule_item" />-->
 
-    <Button
-        android:id="@+id/btnShowSchedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Показать расписание"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spWeekday" />
+<!--    android:layout_marginStart="5dp"-->
+<!--    android:layout_marginTop="22dp"-->
+<!--    android:layout_marginEnd="5dp"-->
+<!--    android:layout_marginBottom="5dp"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:visibility="visible"
-    tools:context=".NewsDetailActivity">
+    tools:context=".NewsDetailActivity"
+    android:backgroundTint="?attr/cardBackgroundRvItem">
 
     <TextView
         android:id="@+id/tv_date_detail"
@@ -17,6 +18,7 @@
         android:text="22-02-2019"
         android:textSize="18sp"
         android:textStyle="italic"
+        android:textColor="?attr/dateRvItemColor"
         android:transitionName="dateTN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +34,7 @@
         android:lineSpacingExtra="4sp"
         android:text="Title Sample"
         android:textAlignment="center"
-        android:textColor="@color/title_text_color"
+        android:textColor="?attr/newsDetailTitle"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +53,7 @@
         android:scrollbars="vertical"
         android:text="@string/mylorem"
         android:textSize="18sp"
+        android:textColor="?attr/anounceRvItemColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

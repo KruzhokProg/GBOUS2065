@@ -1,7 +1,9 @@
 package com.example.gbous2065;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
@@ -17,6 +19,16 @@ public class NewsDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(loadState() == true){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            setTheme(R.style.DarkTheme_GBOUS2065);
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            setTheme(R.style.Theme_GBOUS2065);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_detail);
 
@@ -42,5 +54,11 @@ public class NewsDetailActivity extends AppCompatActivity {
             tvDate.setText(dateMas[0] + "\n" + hours + ":" + mins);
 
         }
+    }
+
+    private  Boolean loadState(){
+        SharedPreferences sharedPreferences = getSharedPreferences("nightMode", MODE_PRIVATE);
+        Boolean state = sharedPreferences.getBoolean("nightMode", false);
+        return state;
     }
 }

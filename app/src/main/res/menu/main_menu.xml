@@ -17,19 +17,22 @@
             android:id="@+id/nav_parent"
             android:title="Контакты"
             android:icon="@drawable/ic_parent"/>
+        <item
+            android:id="@+id/nav_dark_mode"
+            android:title="Темная тема"
+            android:icon="@drawable/ic_dark_mode"
+            android:actionLayout="@layout/theme_switch" />
     </group>
 
     <item>
         <menu>
-            <item
-                android:id="@+id/nav_login"
-                android:icon="@drawable/ic_user"
-                android:title="Войти" />
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_exit"
-                android:title="Выйти" />
+                <item
+                    android:id="@+id/nav_login"
+                    android:icon="@drawable/ic_user"
+                    android:title="Войти" />
         </menu>
     </item>
+
+
 
 </menu>
