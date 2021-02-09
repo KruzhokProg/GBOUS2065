@@ -16,4 +16,8 @@
 
     <color name="cv">#f0f0f0</color>
 
+    <color name="hintColor">#1E656D</color>
+<!--    #ff5c33-->
+    <color name="editTextColor">#1E656D</color>
+
 </resources>

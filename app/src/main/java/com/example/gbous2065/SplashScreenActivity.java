@@ -60,6 +60,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         header.setAnimation(header_anim);
         footer.setAnimation(footer_anim);
 
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

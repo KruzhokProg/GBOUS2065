@@ -109,9 +109,7 @@ public class ScheduleFragment extends Fragment {
             ShowCacheSchedule();
         }
         else {
-
             ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
-
 
             Call<AllFiles> call = apiService.getAllFiles("OAuth " + ACCESS_TOKEN, 1000);
             call.enqueue(new Callback<AllFiles>() {

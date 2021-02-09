@@ -73,6 +73,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case R.id.nav_login:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+                toolbar.setTitle("Вход");
+                break;
             case R.id.nav_news:
 //                startActivity(new Intent(this, MainActivity.class));
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();

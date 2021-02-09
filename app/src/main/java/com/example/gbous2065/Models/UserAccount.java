@@ -1,0 +1,86 @@
+package com.example.gbous2065.Models;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class UserAccount {
+    @SerializedName("id_original")
+    private String id;
+    private String surname;
+    private String name;
+    private String patronymic;
+    private String email;
+    private String place;
+    private String functionality;
+    private Map<String, UserDoc>[] docs;
+
+    public UserAccount(){
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getFunctionality() {
+        return functionality;
+    }
+
+    public void setFunctionality(String functionality) {
+        this.functionality = functionality;
+    }
+
+    public Map<String, UserDoc>[] getDocs() {
+        return docs;
+    }
+
+    public void setDocs(Map<String, UserDoc>[] docs) {
+        this.docs = docs;
+    }
+}

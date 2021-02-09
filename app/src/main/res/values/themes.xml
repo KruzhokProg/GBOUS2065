@@ -85,5 +85,13 @@
         <item name="textTitleMenuDetail">#F1F3CE</item>
     </style>
 
+    <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">#ff5c33</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#000</item>
+        <item name="colorControlActivated">#ff5c33</item>
+    </style>
 
 </resources>
