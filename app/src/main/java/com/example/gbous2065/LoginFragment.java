@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gbous2065.Models.UserAccount;
 import com.example.gbous2065.Models.UserDoc;
+import com.example.gbous2065.Models.UserDocHistory;
 import com.example.gbous2065.Network.ApiNewsClient;
 import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiUserAccountClient;
@@ -57,11 +58,20 @@ public class LoginFragment extends Fragment {
                     public void onResponse(Call<UserAccount> call, Response<UserAccount> response) {
                         UserAccount user = response.body();
                         List<UserDoc> userDocList = new ArrayList<>();
-                        for (Map<String, UserDoc> item :user.getDocs()) {
+                        List<UserDocHistory> userDocHistories = new ArrayList<>();
+                        for (Map<String, UserDoc> item : user.getDocs()) {
                             Set<String> keys = item.keySet();
                             for (String s : keys) {
                                 UserDoc userDoc = item.get(s);
                                 userDocList.add(userDoc);
+                            }
+                        }
+
+                        for (Map<String, UserDocHistory> item : user.getDocsHistory()) {
+                            Set<String> keys = item.keySet();
+                            for(String s : keys){
+                                UserDocHistory userDocHistory = item.get(s);
+                                userDocHistories.add(userDocHistory);
                             }
                         }
                         Toast.makeText(getContext(), "Ura!", Toast.LENGTH_SHORT).show();

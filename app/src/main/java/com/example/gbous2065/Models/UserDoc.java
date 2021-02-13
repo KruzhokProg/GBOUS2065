@@ -16,9 +16,29 @@ public class UserDoc {
     private String places;
     @SerializedName("date_end")
     private String endDate;
+    @SerializedName("is_subscribe")
+    private Integer isSubscribe;
+    @SerializedName("is_unsubscribe")
+    private Integer isUnsubscribe;
     private String file;
 
     public UserDoc(){}
+
+    public Integer getIsSubscribe() {
+        return isSubscribe;
+    }
+
+    public void setIsSubscribe(Integer isSubscribe) {
+        this.isSubscribe = isSubscribe;
+    }
+
+    public Integer getIsUnsubscribe() {
+        return isUnsubscribe;
+    }
+
+    public void setIsUnsubscribe(Integer isUnsubscribe) {
+        this.isUnsubscribe = isUnsubscribe;
+    }
 
     public int getId() {
         return id;

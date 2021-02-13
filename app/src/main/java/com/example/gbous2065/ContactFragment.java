@@ -175,11 +175,35 @@ public class ContactFragment extends Fragment {
         //55.600776, 37.360295
         mapView = view.findViewById(R.id.map);
         mapView.getMap().move(
-                new CameraPosition(new Point(55.600776, 37.360295), 8.0f, 0.0f, 0.0f),
+                new CameraPosition(new Point(55.600776, 37.360295), 13.0f, 0.0f, 0.0f),
                 new Animation(Animation.Type.SMOOTH, 0),
                 null);
-        ImageProvider marker = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(getContext(), R.drawable.ic_school));
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600776, 37.360295), marker);
+        ImageProvider markerSchool = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_school_24));
+        ImageProvider markerKidGarden = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baby));
+        // 55.600776, 37.360295 - улица Атласова 7
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600776, 37.360295), markerSchool);
+        // 55.592830, 37.372207 - улица Радужная 5
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.592830, 37.372207), markerSchool);
+        // 55.603873, 37.365990 - улица Бианки 9А
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.603873, 37.365990), markerSchool);
+        // 55.600409, 37.362918 - улица Лаптева 6к4
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600409, 37.362918), markerKidGarden);
+        // 55.590765, 37.375333 - Геогриевская улица 2
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.590765, 37.375333), markerKidGarden);
+        // 55.590328, 37.371398 - Радужная улица 12
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.590328, 37.371398), markerKidGarden);
+        // 55.593497, 37.365846 - Радужный проезд 2
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.593497, 37.365846), markerKidGarden);
+        // 55.604987, 37.360510 - Никитина 6к1
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.604987, 37.360510), markerKidGarden);
+        // 55.601045, 37.358013 - улица Атласова 7к2
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.601045, 37.358013), markerKidGarden);
+        // 55.603842, 37.368928 - улица Бианки 13А
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.603842, 37.368928), markerKidGarden);
+        // 55.599926, 37.364939 - Лаптева 6к2
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.599926, 37.364939), markerKidGarden);
+        // 55.600079, 37.363924 - Лаптева 6к3
+        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600079, 37.363924), markerKidGarden);
 
         return view;
     }

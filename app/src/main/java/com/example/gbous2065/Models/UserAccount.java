@@ -16,8 +16,18 @@ public class UserAccount {
     private String place;
     private String functionality;
     private Map<String, UserDoc>[] docs;
+    @SerializedName("docs_history")
+    private Map<String, UserDocHistory>[] docsHistory;
 
     public UserAccount(){
+    }
+
+    public Map<String, UserDocHistory>[] getDocsHistory() {
+        return docsHistory;
+    }
+
+    public void setDocsHistory(Map<String, UserDocHistory>[] docsHistory) {
+        this.docsHistory = docsHistory;
     }
 
     public String getId() {
