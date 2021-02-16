@@ -79,6 +79,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         public ConstraintLayout expandableLayout;
         public ConstraintLayout contactItemConstraintLayout;
         public ImageView imgvMap;
+        public ImageView imgvPhone;
+        public ImageView imgvEmail;
 
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,6 +94,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             imgvArrowContact = itemView.findViewById(R.id.imgvArrowContactExpand);
             contactItemConstraintLayout = itemView.findViewById(R.id.contactItemConstraintLayout);
             imgvMap = itemView.findViewById(R.id.imgvContactMap);
+            imgvPhone = itemView.findViewById(R.id.imgvContactPhone);
+            imgvEmail = itemView.findViewById(R.id.imgvContactEmail);
 
             imgvMap.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,6 +103,21 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
                     callback.contactMapClick(getAdapterPosition());
                 }
             });
+
+            imgvPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.contactPhoneClick(getAdapterPosition());
+                }
+            });
+
+            imgvEmail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.contactEmailClick(getAdapterPosition());
+                }
+            });
+
 
             contactItemConstraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

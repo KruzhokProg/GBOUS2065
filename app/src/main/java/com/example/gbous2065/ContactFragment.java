@@ -1,9 +1,11 @@
 package com.example.gbous2065;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,7 +99,7 @@ public class ContactFragment extends Fragment implements IContactMap {
         View view = inflater.inflate(R.layout.activity_contact_fragment, container, false);
         rvContacts = view.findViewById(R.id.rv_contacts);
         contacts = new ArrayList<>();
-        adapter = new ContactAdapter(contacts, this::contactMapClick);
+        adapter = new ContactAdapter(contacts, this);
         rvContacts.setAdapter(adapter);
         //contacts.add(new Contact("Директор", "Ланщиков Дмитрий Николаевич", "head@mail.ru", "89263748596", "Moscow"));
         //contacts.add(new Contact("Заместитель директора", "Шурухина Алла Юрьевна", "zam@mail.ru", "84657283474", "Moscow"));
@@ -251,6 +253,23 @@ public class ContactFragment extends Fragment implements IContactMap {
                 new Animation(Animation.Type.SMOOTH, 0),
                 null);
 
+    }
+
+    @Override
+    public void contactPhoneClick(int position) {
+        Contact contact = contacts.get(position);
+        String tel = "tel:" + contact.getPhone();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(tel));
+        startActivity(intent);
+    }
+
+    @Override
+    public void contactEmailClick(int position) {
+        Contact contact = contacts.get(position);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + contact.getEmail()));
+        startActivity(emailIntent);
     }
 
     public Float[] getCoordsByAdress(String adres) {
