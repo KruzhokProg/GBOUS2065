@@ -4,6 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,12 +19,15 @@ import com.example.gbous2065.R;
 
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder>{
 
     List<Contact> data;
+    boolean isExpanded;
+    IContactMap callback;
 
-    public ContactAdapter(List<Contact> data) {
+    public ContactAdapter(List<Contact> data, IContactMap callback) {
         this.data = data;
+        this.callback = callback;
     }
 
     @NonNull
@@ -40,8 +46,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         holder.tvContactPhone.setText(contact.getPhone());
         holder.tvContactAdress.setText(contact.getAdress());
 
-        boolean isExpanded = data.get(position).isExpanded();
-        holder.expandableLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        isExpanded = data.get(position).isExpanded();
+        if(isExpanded == true) {
+            holder.expandableLayout.setVisibility(View.VISIBLE);
+            holder.imgvArrowContact.setImageResource(R.drawable.ic_arrow_up);
+        }
+        else{
+            holder.expandableLayout.setVisibility(View.GONE);
+            holder.imgvArrowContact.setImageResource(R.drawable.ic_arrow_down);
+        }
+
+        //holder.expandableLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -52,6 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         return 0;
     }
 
+
     public class ContactViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvContactPosition;
@@ -59,7 +75,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         public TextView tvContactEmail;
         public TextView tvContactPhone;
         public TextView tvContactAdress;
+        public ImageView imgvArrowContact;
         public ConstraintLayout expandableLayout;
+        public ConstraintLayout contactItemConstraintLayout;
+        public ImageView imgvMap;
 
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,8 +89,18 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             tvContactPhone = itemView.findViewById(R.id.tvContactPhone);
             tvContactAdress = itemView.findViewById(R.id.tvContactAdress);
             expandableLayout = itemView.findViewById(R.id.expandableLayout);
+            imgvArrowContact = itemView.findViewById(R.id.imgvArrowContactExpand);
+            contactItemConstraintLayout = itemView.findViewById(R.id.contactItemConstraintLayout);
+            imgvMap = itemView.findViewById(R.id.imgvContactMap);
 
-            tvContactPosition.setOnClickListener(new View.OnClickListener() {
+            imgvMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.contactMapClick(getAdapterPosition());
+                }
+            });
+
+            contactItemConstraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Contact contact = data.get(getAdapterPosition());

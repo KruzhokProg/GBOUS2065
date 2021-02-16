@@ -23,8 +23,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gbous2065.Adapters.ContactAdapter;
+import com.example.gbous2065.Adapters.IContactMap;
 import com.example.gbous2065.Models.AllFiles;
 import com.example.gbous2065.Models.Contact;
+import com.example.gbous2065.Models.ContactMapCoordinates;
 import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiYandexClient;
 import com.loopj.android.http.AsyncHttpClient;
@@ -57,7 +59,7 @@ import retrofit2.Response;
 
 import static com.example.gbous2065.Network.ApiYandexClient.ACCESS_TOKEN;
 
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements IContactMap {
 
     WebView mapWebView;
     String schoolURL = "";
@@ -65,12 +67,28 @@ public class ContactFragment extends Fragment {
     RecyclerView rvContacts;
     AsyncHttpClient asyncHttpClient;
     ContactAdapter adapter;
+    List<Contact> contacts;
+    List<ContactMapCoordinates> coordinates;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapKitFactory.setApiKey("00853820-db0b-432b-b76d-cef71a379ae4");
         MapKitFactory.initialize(getContext());
+
+        coordinates = new ArrayList<>();
+        coordinates.add(new ContactMapCoordinates(55.600776f, 37.360295f, "Ул. Атласова, д.7 корп.3", "Школа"));
+        coordinates.add(new ContactMapCoordinates(55.592830f, 37.372207f, "Ул. Радужная, д. 5", "Школа"));
+        coordinates.add(new ContactMapCoordinates(55.603873f, 37.365990f, "Ул. Бианки, д. 9А", "Школа"));
+        coordinates.add(new ContactMapCoordinates(55.600409f, 37.362918f, "Ул. Лаптева, д. 6, корп. 4", "Школа"));
+        coordinates.add(new ContactMapCoordinates(55.590765f, 37.375333f, "Ул. Георгиевская, д.2", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.590328f, 37.371398f, "Ул. Радужная, д.12", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.593497f, 37.365846f, "Радужный проезд, д. 2", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.604987f, 37.360510f, "Ул. Никитина, д. 6, корп. 1", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.601045f, 37.358013f, "Ул. Атласова, д.7, корп. 2", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.603842f, 37.368928f, "Ул. Бианки, д. 13А", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.599926f, 37.364939f, "Ул. Лаптева, д. 6, корп. 2", "Сад"));
+        coordinates.add(new ContactMapCoordinates(55.600079f, 37.363924f, "Ул. Лаптева, д. 6, корп. 3", "Сад"));
     }
 
     @Nullable
@@ -78,8 +96,8 @@ public class ContactFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_contact_fragment, container, false);
         rvContacts = view.findViewById(R.id.rv_contacts);
-        List<Contact> contacts = new ArrayList<>();
-        adapter = new ContactAdapter(contacts);
+        contacts = new ArrayList<>();
+        adapter = new ContactAdapter(contacts, this::contactMapClick);
         rvContacts.setAdapter(adapter);
         //contacts.add(new Contact("Директор", "Ланщиков Дмитрий Николаевич", "head@mail.ru", "89263748596", "Moscow"));
         //contacts.add(new Contact("Заместитель директора", "Шурухина Алла Юрьевна", "zam@mail.ru", "84657283474", "Moscow"));
@@ -111,7 +129,7 @@ public class ContactFragment extends Fragment {
                     public void onSuccess(int statusCode, Header[] headers, File file) {
                         if (file != null) {
                             Boolean isHeaderRow, isFinish;
-                            String content="";
+                            String content = "";
                             try {
                                 FileInputStream fis = new FileInputStream(file);
                                 XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
@@ -122,7 +140,7 @@ public class ContactFragment extends Fragment {
                                     isFinish = false;
 
                                     while (rowIterator.hasNext() && !isFinish) {
-                                        content="";
+                                        content = "";
                                         Row row = rowIterator.next();
                                         Iterator<Cell> cellIterator = row.cellIterator();
                                         isHeaderRow = false;
@@ -131,7 +149,7 @@ public class ContactFragment extends Fragment {
                                             switch (cell.getCellType()) {
                                                 case Cell.CELL_TYPE_STRING:
                                                     content += cell.getStringCellValue();
-                                                    if(content.equals("Функционал")){
+                                                    if (content.equals("Функционал")) {
                                                         isHeaderRow = true;
                                                     }
                                                     content += "&";
@@ -141,7 +159,7 @@ public class ContactFragment extends Fragment {
                                             }
                                         }
 
-                                        if(!isHeaderRow && !isFinish) {
+                                        if (!isHeaderRow && !isFinish) {
                                             String[] infoMas = content.split("&");
                                             Contact newContact = new Contact();
                                             newContact.setPosition(infoMas[0]);
@@ -175,36 +193,21 @@ public class ContactFragment extends Fragment {
         //55.600776, 37.360295
         mapView = view.findViewById(R.id.map);
         mapView.getMap().move(
-                new CameraPosition(new Point(55.600776, 37.360295), 13.0f, 0.0f, 0.0f),
+                new CameraPosition(new Point(coordinates.get(0).getLatitude(), coordinates.get(0).getLongitude()), 13.0f, 0.0f, 0.0f),
                 new Animation(Animation.Type.SMOOTH, 0),
                 null);
+
         ImageProvider markerSchool = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_school_24));
         ImageProvider markerKidGarden = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baby));
-        // 55.600776, 37.360295 - улица Атласова 7
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600776, 37.360295), markerSchool);
-        // 55.592830, 37.372207 - улица Радужная 5
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.592830, 37.372207), markerSchool);
-        // 55.603873, 37.365990 - улица Бианки 9А
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.603873, 37.365990), markerSchool);
-        // 55.600409, 37.362918 - улица Лаптева 6к4
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600409, 37.362918), markerKidGarden);
-        // 55.590765, 37.375333 - Геогриевская улица 2
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.590765, 37.375333), markerKidGarden);
-        // 55.590328, 37.371398 - Радужная улица 12
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.590328, 37.371398), markerKidGarden);
-        // 55.593497, 37.365846 - Радужный проезд 2
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.593497, 37.365846), markerKidGarden);
-        // 55.604987, 37.360510 - Никитина 6к1
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.604987, 37.360510), markerKidGarden);
-        // 55.601045, 37.358013 - улица Атласова 7к2
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.601045, 37.358013), markerKidGarden);
-        // 55.603842, 37.368928 - улица Бианки 13А
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.603842, 37.368928), markerKidGarden);
-        // 55.599926, 37.364939 - Лаптева 6к2
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.599926, 37.364939), markerKidGarden);
-        // 55.600079, 37.363924 - Лаптева 6к3
-        mapView.getMap().getMapObjects().addPlacemark(new Point(55.600079, 37.363924), markerKidGarden);
 
+        for (ContactMapCoordinates item : coordinates) {
+            if (item.getType().equals("Школа")) {
+                mapView.getMap().getMapObjects().addPlacemark(new Point(item.getLatitude(), item.getLongitude()), markerSchool);
+            } else {
+                mapView.getMap().getMapObjects().addPlacemark(new Point(item.getLatitude(), item.getLongitude()), markerKidGarden);
+            }
+
+        }
         return view;
     }
 
@@ -236,5 +239,29 @@ public class ContactFragment extends Fragment {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    @Override
+    public void contactMapClick(int position) {
+
+        Contact contact = contacts.get(position);
+        Float[] coords = getCoordsByAdress(contact.getAdress());
+        mapView.getMap().move(
+                new CameraPosition(new Point(coords[0], coords[1]), 18.0f, 0.0f, 0.0f),
+                new Animation(Animation.Type.SMOOTH, 0),
+                null);
+
+    }
+
+    public Float[] getCoordsByAdress(String adres) {
+        Float[] res = new Float[2];
+        for (ContactMapCoordinates item : coordinates) {
+            if (item.getAdress().equals(adres)) {
+                res[0] = item.getLatitude();
+                res[1] = item.getLongitude();
+                return res;
+            }
+        }
+        return null;
     }
 }
