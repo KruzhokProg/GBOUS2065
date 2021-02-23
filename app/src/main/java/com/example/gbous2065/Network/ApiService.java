@@ -56,6 +56,6 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
-    @POST("test.php")
+    @POST("user.php")
     Call<UserAccount> getUserInfo(@Field("user") String email, @Field("passwd") String passwd);
 }

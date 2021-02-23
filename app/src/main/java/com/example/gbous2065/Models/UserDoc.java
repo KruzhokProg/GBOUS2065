@@ -21,8 +21,28 @@ public class UserDoc {
     @SerializedName("is_unsubscribe")
     private Integer isUnsubscribe;
     private String file;
+    @SerializedName("subscribe_link")
+    private String subLink;
+    @SerializedName("unsubscribe_link")
+    private String unsubLink;
 
     public UserDoc(){}
+
+    public String getSubLink() {
+        return subLink;
+    }
+
+    public void setSubLink(String subLink) {
+        this.subLink = subLink;
+    }
+
+    public String getUnsubLink() {
+        return unsubLink;
+    }
+
+    public void setUnsubLink(String unsubLink) {
+        this.unsubLink = unsubLink;
+    }
 
     public Integer getIsSubscribe() {
         return isSubscribe;

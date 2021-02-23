@@ -3,4 +3,6 @@
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
     <string name="mylorem">orem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit orci ac nisi convallis, non pellentesque orci ullamcorper. Donec ac eros lacinia, scelerisque nibh eu, lobortis sem. Nunc dapibus sapien ut eros mollis fermentum. Integer augue quam, consequat quis lorem nec, vestibulum mollis leo.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

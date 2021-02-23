@@ -1,5 +1,6 @@
 package com.example.gbous2065.Models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -18,8 +19,17 @@ public class UserAccount {
     private Map<String, UserDoc>[] docs;
     @SerializedName("docs_history")
     private Map<String, UserDocHistory>[] docsHistory;
+    private String error;
 
     public UserAccount(){
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Map<String, UserDocHistory>[] getDocsHistory() {

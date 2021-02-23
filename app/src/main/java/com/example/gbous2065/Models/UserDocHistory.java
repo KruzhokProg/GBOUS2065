@@ -8,6 +8,12 @@ public class UserDocHistory {
     private String date;
     private String title;
 
+    public UserDocHistory(int id, String date, String title) {
+        this.id = id;
+        this.date = date;
+        this.title = title;
+    }
+
     public int getId() {
         return id;
     }
