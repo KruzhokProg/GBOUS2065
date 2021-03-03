@@ -47,8 +47,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + weekdaysTable + " (" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + weekdaysTable + "(" +
                 colWeekdayName + " TEXT PRIMARY KEY);");
+
+        // CREATE TABLE IF NOT EXISTS Weekdays (name TEXT PRIMARY KEY);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + classInfoTable + " (" +
                 colClassInfoId + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

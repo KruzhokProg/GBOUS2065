@@ -20,4 +20,6 @@
 <!--    #ff5c33-->
     <color name="editTextColor">#1E656D</color>
 
+    <color name="expired">#ff2b2b</color>
+
 </resources>

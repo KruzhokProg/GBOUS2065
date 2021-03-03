@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="#1E656D"
         app:tabSelectedTextColor="#ff5c33"
-        app:tabTextColor="#000">
+        app:tabTextColor="#1E656D">
 
         <!--        <com.google.android.material.tabs.TabItem-->
         <!--            android:id="@+id/tabSubscribe"-->

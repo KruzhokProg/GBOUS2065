@@ -11,16 +11,25 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.gbous2065.Adapters.PagerAdapter;
+import com.example.gbous2065.Models.UserDocFragment;
+import com.example.gbous2065.Models.UserDocHistory;
 import com.example.gbous2065.R;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserAccountFragment extends Fragment {
 
     TabLayout tabLayout;
     ViewPager viewPager;
+    List<UserDocFragment> subDocs, unsubDocs;
+
+    public UserAccountFragment(List<UserDocFragment> subDocs, List<UserDocFragment> unsubDocs) {
+        this.subDocs = subDocs;
+        this.unsubDocs = unsubDocs;
+    }
 
     @Nullable
     @Override
@@ -32,8 +41,8 @@ public class UserAccountFragment extends Fragment {
 
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
 
-        pagerAdapter.addFragment(new SubscribeFragment(), "Подписанные");
-        pagerAdapter.addFragment(new UnsubscribeFragment(), "Неподписанные");
+        pagerAdapter.addFragment(new SubscribeFragment(subDocs), "Подписанные");
+        pagerAdapter.addFragment(new UnsubscribeFragment(unsubDocs), "Неподписанные");
 
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
