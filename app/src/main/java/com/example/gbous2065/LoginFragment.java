@@ -97,6 +97,7 @@ public class LoginFragment extends Fragment {
                                 Integer docId = -1;
                                 String title="";
                                 String dateEnd="";
+                                String file="", subLink="", unsubLink="";
                                 for (UserDocHistory userDocHistory: userDocHistories) {
                                     if (userDocHistory.getId() == userDoc.getId()){
                                         if( DateTimeDifference.startLaterThanEnd(userDocHistory.getDate(), latest, "login") ){
@@ -105,17 +106,20 @@ public class LoginFragment extends Fragment {
                                             docId = userDocHistory.getId();
                                             title = userDoc.getTitle();
                                             dateEnd = userDoc.getEndDate();
+                                            file = userDoc.getFile();
+                                            subLink = userDoc.getSubLink();
+                                            unsubLink = userDoc.getUnsubLink();
                                         }
                                     }
                                 }
 
                                 UserDocFragment userDocFragment;
                                 if(status.equals("Подписание документа") && docId != -1){
-                                    userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest);
+                                    userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
                                     subscribedDocs.add(userDocFragment);
                                 }
                                 else if(docId != -1){
-                                    userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest);
+                                    userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
                                     unsubscribedDocs.add(userDocFragment);
                                 }
                             }
@@ -136,45 +140,18 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    public UserDocFragment getUserDocFragment(Integer docId, String title, String dateEnd, String status, String latest){
+    public UserDocFragment getUserDocFragment(Integer docId, String title, String dateEnd, String status,
+                                              String latest, String fileUrl, String subLink, String unsubLink){
         UserDocFragment userDocFragment = new UserDocFragment();
         userDocFragment.setId(docId);
         userDocFragment.setTitle(title);
         userDocFragment.setDateEnd(dateEnd);
         userDocFragment.setStatus(status);
         userDocFragment.setDateStatus(latest);
+        userDocFragment.setFileUrl(fileUrl);
+        userDocFragment.setSubLink(subLink);
+        userDocFragment.setUnsubLink(unsubLink);
         return userDocFragment;
     }
 
-//    public static Boolean startLaterThanEnd(String startTimeStr, String endTimeStr) {
-//
-//        LocalDate today = LocalDate.now();
-//        String startTimeStrT =startTimeStr;
-//        String endTimeStrT = endTimeStr;
-//
-//        DateTimeFormatter formatter = DateTimeFormatter
-//                .ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//        try {
-//
-//            LocalDateTime startTime = LocalDateTime.parse(startTimeStrT,
-//                    formatter);
-//            LocalDateTime endTime = LocalDateTime.parse(endTimeStrT, formatter);
-//
-//            Duration d = Duration.between(startTime, endTime);
-//
-//            System.out.println("dur " + d.getSeconds());
-//            if (d.getSeconds() == 0)
-//                return false;
-//            else if (d.getSeconds() > 0)
-//                return false;
-//            else
-//                return true;
-//
-//        } catch (DateTimeParseException e) {
-//            System.out.println("Invalid Input" + e.getMessage());
-//
-//        }
-//        return false;
-//    }
 }

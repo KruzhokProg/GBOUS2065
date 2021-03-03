@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".DisplayDocActivity">
 
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfViewer"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubDoc"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="33dp"
+        android:onClick="btnSubDocOnClick"
+        android:padding="10dp"
+        android:text="Подписать"
+        app:backgroundTint="#1E656D"
+        app:icon="@drawable/ic_finger_print"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pdfViewer" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

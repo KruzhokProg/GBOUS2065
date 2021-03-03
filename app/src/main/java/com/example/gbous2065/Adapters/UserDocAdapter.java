@@ -1,6 +1,7 @@
 package com.example.gbous2065.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gbous2065.DisplayDocActivity;
 import com.example.gbous2065.Models.UserDocFragment;
 import com.example.gbous2065.R;
 import com.example.gbous2065.Utils.DateTimeDifference;
@@ -46,7 +48,6 @@ public class UserDocAdapter extends RecyclerView.Adapter<UserDocViewHolder> {
             String[] curDateMas = userDoc.getDateEnd().split("-");
             String curDateEnd = curDateMas[2] + "-" +curDateMas[1] + "-" + curDateMas[0];
             if(DateTimeDifference.startLaterThanEnd(now, curDateEnd, "adapter")){
-                //holder.layout.setBackgroundColor(ContextCompat.getColor(context, R.color.expired));
                 holder.tvExpired.setVisibility(View.VISIBLE);
             }
         }
@@ -54,7 +55,9 @@ public class UserDocAdapter extends RecyclerView.Adapter<UserDocViewHolder> {
         holder.imgvSeeDoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, userDoc.getStatus(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(context, DisplayDocActivity.class);
+                i.putExtra("docInfo", userDoc);
+                context.startActivity(i);
             }
         });
     }
