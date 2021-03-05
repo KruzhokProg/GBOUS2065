@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import androidx.biometric.BiometricPrompt;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.gbous2065.Models.UserDoc;
@@ -28,6 +33,7 @@ public class DisplayDocActivity extends AppCompatActivity {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    UserDoc userDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +42,45 @@ public class DisplayDocActivity extends AppCompatActivity {
 
         pdfView = findViewById(R.id.pdfViewer);
         asyncHttpClient = new AsyncHttpClient();
+        userDoc = (UserDoc)getIntent().getExtras().getParcelable("docInfo");
 
         executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(),
-                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
-                        .show();
+                // Диалоговаое окно Логин и Пароль
+                LayoutInflater layoutInflater = LayoutInflater.from(DisplayDocActivity.this);
+                View view = layoutInflater.inflate(R.layout.dialog_subscribe, null);
+                EditText etLoginDialog = view.findViewById(R.id.etLoginDialog);
+                EditText etPassDialog = view.findViewById(R.id.etPassDialog);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayDocActivity.this);
+                alertDialogBuilder.setView(view);
+                alertDialogBuilder.setTitle("Подтвердить");
+
+                alertDialogBuilder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(DisplayDocActivity.this, "Да", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(DisplayDocActivity.this, "Нет", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.editTextColor));
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.editTextColor));
+                    }
+                });
+                alertDialog.show();
+
             }
 
             @Override
@@ -64,9 +100,8 @@ public class DisplayDocActivity extends AppCompatActivity {
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use account password")
+                .setTitle("Подпись документа")
+                .setNegativeButtonText("Использовать Логин и Пароль")
                 .build();
 
         UserDocFragment userDoc = (UserDocFragment) getIntent().getExtras().get("docInfo");
