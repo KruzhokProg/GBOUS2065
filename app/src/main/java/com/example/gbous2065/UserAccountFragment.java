@@ -26,6 +26,8 @@ public class UserAccountFragment extends Fragment {
     ViewPager viewPager;
     List<UserDocFragment> subDocs, unsubDocs;
 
+    public UserAccountFragment(){}
+
     public UserAccountFragment(List<UserDocFragment> subDocs, List<UserDocFragment> unsubDocs) {
         this.subDocs = subDocs;
         this.unsubDocs = unsubDocs;

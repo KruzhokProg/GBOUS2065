@@ -28,6 +28,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     Toolbar toolbar;
     ImageView logoImage;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +42,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             setTheme(R.style.Theme_GBOUS2065);
         }
 
+        sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE);
+        String savedLogin = sharedPref.getString("login", "");
+        String savedPass = sharedPref.getString("pass", "");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -65,9 +69,17 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
-        navigationView.setCheckedItem(R.id.nav_news);
-        toolbar.setTitle("Новости");
+        if(!savedLogin.equals("") && !savedPass.equals("")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+            toolbar.setTitle("Вход");
+        }
+        else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_news);
+            toolbar.setTitle("Новости");
+        }
+
+
     }
 
     @Override

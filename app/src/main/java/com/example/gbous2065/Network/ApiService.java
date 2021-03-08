@@ -55,6 +55,9 @@ public interface ApiService {
             @Url String preview_url
     );
 
+    @GET
+    Call<ResponseBody> subscribeDocument(@Url String subDoc);
+
     @FormUrlEncoded
     @POST("user.php")
     Call<UserAccount> getUserInfo(@Field("user") String email, @Field("passwd") String passwd);
