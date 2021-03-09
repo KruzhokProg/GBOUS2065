@@ -72,18 +72,7 @@ public class DisplayDocActivity extends AppCompatActivity {
                 alertDialogBuilder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE);
-                        String loginSHA256 = sharedPref.getString("login", "");
-                        String passSHA256 = sharedPref.getString("pass", "");
-                        String login = Crypto.getSHA256(etLoginDialog.getText().toString());
-                        String pass = Crypto.getSHA256(etPassDialog.getText().toString());
-
-                        if(loginSHA256.equals(login) && passSHA256.equals(pass)){
-                            Toast.makeText(DisplayDocActivity.this, "Correct!", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(DisplayDocActivity.this, "Неправильные данные", Toast.LENGTH_SHORT).show();
-                        }
+                        subscribeDoc();
                     }
                 });
                 alertDialogBuilder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
@@ -107,29 +96,7 @@ public class DisplayDocActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                String subLink = userDoc.getSubLink();
-                ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
-                Call<ResponseBody> call = apiService.subscribeDocument(subLink);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Toast.makeText(DisplayDocActivity.this, "Документ: " + userDoc.getTitle() + " подписан!", Toast.LENGTH_SHORT).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(DisplayDocActivity.this, MenuActivity.class);
-                                startActivity(i);
-//                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
-//                                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
-                            }
-                        }, 1000);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
+                subscribeDoc();
             }
 
             @Override
@@ -167,5 +134,29 @@ public class DisplayDocActivity extends AppCompatActivity {
 
     public void btnSubDocOnClick(View view) {
         biometricPrompt.authenticate(promptInfo);
+    }
+
+    public void subscribeDoc(){
+        String subLink = userDoc.getSubLink();
+        ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
+        Call<ResponseBody> call = apiService.subscribeDocument(subLink);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(DisplayDocActivity.this, "Документ: " + userDoc.getTitle() + " подписан!", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(DisplayDocActivity.this, MenuActivity.class);
+                        startActivity(i);
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }
