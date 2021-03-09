@@ -1,5 +1,6 @@
 package com.example.gbous2065;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.gbous2065.Adapters.PagerAdapter;
+import com.example.gbous2065.Models.SubUnsubCombine;
 import com.example.gbous2065.Models.UserDocFragment;
 import com.example.gbous2065.Models.UserDocHistory;
 import com.example.gbous2065.R;
+import com.example.gbous2065.Utils.NetworkDownload;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -26,7 +30,8 @@ public class UserAccountFragment extends Fragment {
     ViewPager viewPager;
     List<UserDocFragment> subDocs, unsubDocs;
 
-    public UserAccountFragment(){}
+    public UserAccountFragment(){
+    }
 
     public UserAccountFragment(List<UserDocFragment> subDocs, List<UserDocFragment> unsubDocs) {
         this.subDocs = subDocs;

@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.gbous2065.Models.CustomCallback;
+import com.example.gbous2065.Models.SubUnsubCombine;
+import com.example.gbous2065.Utils.NetworkDownload;
 import com.google.android.material.navigation.NavigationView;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,8 +73,21 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         if(!savedLogin.equals("") && !savedPass.equals("")){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
-            toolbar.setTitle("Вход");
+
+            NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), "cache", new CustomCallback() {
+                @Override
+                public void onSuccess(SubUnsubCombine value) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new UserAccountFragment(value.getSubscribedDocs(), value.getUnsubscribedDocs())).commit();
+                    toolbar.setTitle("Документы");
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
+
         }
         else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
