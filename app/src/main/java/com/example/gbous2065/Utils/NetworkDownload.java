@@ -17,6 +17,7 @@ import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiUserAccountClient;
 import com.example.gbous2065.R;
 import com.example.gbous2065.UserAccountFragment;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import retrofit2.Response;
 
 public class NetworkDownload {
 
-    public static void getDataAndGo(Context context, FragmentManager fragmentManager, String mode,
+    public static void getDataAndGo(Context context, FragmentManager fragmentManager, NavigationView navigationView, String mode,
                                     CustomCallback customCallback, String... userInfo){
         String loginEncrypted, passwordEncrypted;
         String login, pass;
@@ -136,6 +137,9 @@ public class NetworkDownload {
                         SubUnsubCombine subUnsubCombine = new SubUnsubCombine(subscribedDocs, unsubscribedDocs);
                         customCallback.onSuccess(subUnsubCombine);
                     }
+
+                    navigationView.getMenu().clear();
+                    navigationView.inflateMenu(R.menu.menu_logout);
                 }
             }
             @Override

@@ -28,12 +28,6 @@
     <item android:title="Личный кабинет">
         <menu>
             <item
-                android:title="Войти"
-                android:id="@+id/nav_login"
-                android:icon="@drawable/ic_user" />
-
-
-            <item
                 android:title="Выйти"
                 android:id="@+id/nav_exit"
                 android:icon="@drawable/ic_exit" />

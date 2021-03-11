@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     ImageView logoImage;
     SharedPreferences sharedPref;
+    String savedLogin, savedPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         }
 
         sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE);
-        String savedLogin = sharedPref.getString("login", "");
-        String savedPass = sharedPref.getString("pass", "");
+        savedLogin = sharedPref.getString("login", "");
+        savedPass = sharedPref.getString("pass", "");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
@@ -73,8 +76,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         if(!savedLogin.equals("") && !savedPass.equals("")){
-
-            NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), "cache", new CustomCallback() {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.menu_logout);
+            NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
                 @Override
                 public void onSuccess(SubUnsubCombine value) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -87,9 +91,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
                 }
             });
-
         }
         else {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.menu_login);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_news);
             toolbar.setTitle("Новости");
@@ -98,15 +103,42 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void setVisibilityOfMenuItem(Integer itemId, Boolean visible){
+//        Menu menu = navigationView.getMenu();
+//        for (int menuItemIndex = 0; menuItemIndex < menu.size(); menuItemIndex++) {
+//            MenuItem menuItem= menu.getItem(menuItemIndex);
+//            if(menuItem.hasSubMenu()) {
+//                Menu nestedMenu = menuItem.getSubMenu();
+//                for(int i=0; i<nestedMenu.size(); i++) {
+//                    MenuItem nestedMenuItem = nestedMenu.getItem(i);
+//                    if (nestedMenuItem.getItemId() == itemId) {
+//                        nestedMenuItem.setVisible(visible);
+//                    }
+//                }
+//            }
+//        }
+        navigationView.getMenu().findItem(itemId).setVisible(visible);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()){
+            case R.id.nav_exit:
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("login", "");
+                editor.putString("pass", "");
+                editor.apply();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(navigationView)).commit();
+                toolbar.setTitle("Вход");
+                navigationView.getMenu().clear();
+                navigationView.inflateMenu(R.menu.menu_login);
+                break;
             case R.id.nav_login:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(navigationView)).commit();
                 toolbar.setTitle("Вход");
                 break;
             case R.id.nav_news:
-//                startActivity(new Intent(this, MainActivity.class));
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
                 toolbar.setTitle("Новости");
                 break;
@@ -134,12 +166,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                         if(isChecked){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             saveState(true);
-                            //recreate();
                         }
                         else{
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             saveState(false);
-                            //recreate();
                         }
                     }
                 });

@@ -24,6 +24,7 @@ import com.example.gbous2065.Network.ApiUserAccountClient;
 import com.example.gbous2065.Utils.Crypto;
 import com.example.gbous2065.Utils.DateTimeDifference;
 import com.example.gbous2065.Utils.NetworkDownload;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.UnsupportedEncodingException;
@@ -52,6 +53,11 @@ public class LoginFragment extends Fragment {
     String email, pass, loginEncrypted, passwordEncrypted;
     String temp="";
     SharedPreferences sharedPreferences;
+    NavigationView navigationView;
+
+    public LoginFragment(NavigationView navigationView){
+        this.navigationView = navigationView;
+    }
 
     @Nullable
     @Override
@@ -75,7 +81,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 email =  etEmail.getText().toString();
                 pass =  etPass.getText().toString();
-                NetworkDownload.getDataAndGo(getContext(), getFragmentManager(),"login",null, email, pass);
+                NetworkDownload.getDataAndGo(getContext(), getFragmentManager(), navigationView,"login",null, email, pass);
             }
         });
 
