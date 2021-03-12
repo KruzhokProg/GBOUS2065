@@ -23,21 +23,22 @@
             android:title="Темная тема"
             android:icon="@drawable/ic_dark_mode"
             android:actionLayout="@layout/theme_switch" />
-    <item android:id="@+id/nav_account"
-        android:title="Личный кабинет">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item android:title="Иванов Иван Иванович"
-                    android:id="@+id/nav_employee"
-                    android:icon="@drawable/ic_user"/>
-                <item
-                    android:title="Выйти"
-                    android:id="@+id/nav_exit"
-                    android:icon="@drawable/ic_exit" />
-            </group>
+        <item android:id="@+id/nav_account"
+            android:title="Личный кабинет">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item android:title="Иванов Иван Иванович"
+                        android:id="@+id/nav_employee"
+                        android:icon="@drawable/ic_user"
+                        android:checked="true" />
+                    <item
+                        android:title="Выйти"
+                        android:id="@+id/nav_exit"
+                        android:icon="@drawable/ic_exit" />
+                </group>
 
-        </menu>
-    </item>
+            </menu>
+        </item>
 
     </group>
 

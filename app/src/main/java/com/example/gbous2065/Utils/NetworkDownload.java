@@ -134,12 +134,15 @@ public class NetworkDownload {
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, new UserAccountFragment(subscribedDocs, unsubscribedDocs)).commit();
                     }
                     else if(mode.equals("cache")){
-                        SubUnsubCombine subUnsubCombine = new SubUnsubCombine(subscribedDocs, unsubscribedDocs);
+                        String fullName = user.getSurname() + " " + user.getName() + " " + user.getPatronymic();
+                        SubUnsubCombine subUnsubCombine = new SubUnsubCombine(fullName, subscribedDocs, unsubscribedDocs);
                         customCallback.onSuccess(subUnsubCombine);
                     }
 
+                    String fullName = user.getSurname() + " " + user.getName().substring(0,1) + ". " + user.getPatronymic().substring(0,1) + ".";
                     navigationView.getMenu().clear();
-                    navigationView.inflateMenu(R.menu.menu_logout);
+                    navigationView.inflateMenu(R.menu.menu_account);
+                    navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
                 }
             }
             @Override

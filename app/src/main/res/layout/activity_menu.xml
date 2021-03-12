@@ -20,7 +20,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/drawer_item"
-        app:itemTextColor="@color/drawer_item"/>
+        app:itemTextColor="@color/drawer_item" />
 
     <!--        app:itemIconTint="@color/drawer_item"-->
     <!--        app:itemTextColor="@color/drawer_item"-->
@@ -38,8 +38,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="?attr/toolbarBackground"
             app:navigationIcon="@drawable/ic_menu"
-            app:titleTextColor="?attr/toolbarTitleTextColor"
-            />
+            app:titleTextColor="?attr/toolbarTitleTextColor" />
 
         <FrameLayout
             android:id="@+id/fragment_container"

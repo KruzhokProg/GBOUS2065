@@ -68,13 +68,7 @@ public class LoginFragment extends Fragment {
         etEmail = view.findViewById(R.id.etEmail);
         etPass = view.findViewById(R.id.etPass);
 
-//        sharedPreferences = getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-//        loginEncrypted = sharedPreferences.getString("login", "");
-//        passwordEncrypted = sharedPreferences.getString("pass", "");
-//
-//        if(!loginEncrypted.equals("") && !passwordEncrypted.equals("")){
-//            NetworkDownload.getDataAndGo(getContext(), getFragmentManager());
-//        }
+        navigationView.getMenu().findItem(R.id.nav_login).setChecked(true);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

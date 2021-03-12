@@ -24,17 +24,19 @@
             android:icon="@drawable/ic_dark_mode"
             android:actionLayout="@layout/theme_switch" />
 
-    </group>
-    <item android:title="Личный кабинет">
+    <item android:id="@+id/nav_account"
+        android:title="Личный кабинет">
         <menu>
-            <item
-                android:title="Войти"
-                android:id="@+id/nav_login"
-                android:icon="@drawable/ic_user" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:title="Войти"
+                    android:id="@+id/nav_login"
+                    android:icon="@drawable/ic_user" />
+            </group>
 
         </menu>
     </item>
-
+    </group>
 
 
 </menu>

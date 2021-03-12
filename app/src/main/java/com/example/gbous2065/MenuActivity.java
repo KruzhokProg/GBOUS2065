@@ -78,6 +78,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         if(!savedLogin.equals("") && !savedPass.equals("")){
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.menu_logout);
+
+            //navigationView.setCheckedItem(R.id.nav_account);
             NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
                 @Override
                 public void onSuccess(SubUnsubCombine value) {
@@ -103,7 +105,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void setVisibilityOfMenuItem(Integer itemId, Boolean visible){
+//    public void setVisibilityOfMenuItem(Integer itemId, Boolean visible){
 //        Menu menu = navigationView.getMenu();
 //        for (int menuItemIndex = 0; menuItemIndex < menu.size(); menuItemIndex++) {
 //            MenuItem menuItem= menu.getItem(menuItemIndex);
@@ -117,13 +119,31 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 //                }
 //            }
 //        }
-        navigationView.getMenu().findItem(itemId).setVisible(visible);
-    }
+//        navigationView.getMenu().findItem(itemId).setVisible(visible);
+//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
+
+            case R.id.nav_employee:
+                NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
+                    @Override
+                    public void onSuccess(SubUnsubCombine value) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new UserAccountFragment(value.getSubscribedDocs(), value.getUnsubscribedDocs())).commit();
+                        String fullName = value.getFullName();
+                        navigationView.getMenu().clear();
+                        navigationView.inflateMenu(R.menu.menu_account);
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
+                break;
             case R.id.nav_exit:
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("login", "");
@@ -133,6 +153,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle("Вход");
                 navigationView.getMenu().clear();
                 navigationView.inflateMenu(R.menu.menu_login);
+                item.setChecked(true);
                 break;
             case R.id.nav_login:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(navigationView)).commit();
@@ -141,6 +162,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_news:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
                 toolbar.setTitle("Новости");
+//                navigationView.getMenu().clear();
+//                navigationView.inflateMenu(R.menu.menu_logout);
                 break;
             case R.id.nav_schedule:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ScheduleFragment()).commit();
