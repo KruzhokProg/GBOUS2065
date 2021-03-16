@@ -1,6 +1,8 @@
 package com.example.gbous2065.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gbous2065.Models.AdminDocHistory;
 import com.example.gbous2065.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.AdminDocViewHolder>{
@@ -49,6 +61,34 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
             holder.expandableLayoutDocAdmin.setVisibility(View.VISIBLE);
             holder.imgvExpandArrow.setImageResource(R.drawable.ic_arrow_up_black);
 
+            holder.imgvPieChartStat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater layoutInflater = LayoutInflater.from(context);
+                    View graphView = layoutInflater.inflate(R.layout.dialog_graph,null);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    alertDialogBuilder.setView(graphView);
+                    Chart pieChart = graphView.findViewById(R.id.pieChart);
+
+                    List<PieEntry> values = new ArrayList<PieEntry>();
+                    values.add( new PieEntry( Float.parseFloat(stat.getNumOfSub())));
+                    values.add( new PieEntry( Float.parseFloat(stat.getNumOfUnsub())));
+
+                    PieDataSet pieDataSet = new PieDataSet(values, "Подписавшие / Не подписавшие");
+                    pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                    pieDataSet.setValueTextColor(Color.BLACK);
+                    pieDataSet.setValueTextSize(8f);
+
+                    PieData pieData = new PieData(pieDataSet);
+                    pieChart.setData(pieData);
+                    pieChart.getDescription().setText("");
+                    pieChart.animateY(1000);
+
+                    alertDialogBuilder.setTitle(stat.getTitle());
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            });
 
             if (stat.getFunctionality() != null) {
                 String[] funcMas = stat.getFunctionality().split(", ");
