@@ -22,10 +22,13 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.gbous2065.Models.AdminDocHistory;
 import com.example.gbous2065.Models.CustomCallback;
 import com.example.gbous2065.Models.SubUnsubCombine;
 import com.example.gbous2065.Utils.NetworkDownload;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,6 +38,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     ImageView logoImage;
     SharedPreferences sharedPref;
     String savedLogin, savedPass;
+    Boolean savedAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE);
         savedLogin = sharedPref.getString("login", "");
         savedPass = sharedPref.getString("pass", "");
+        savedAdmin = sharedPref.getBoolean("admin", false);
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
@@ -75,17 +81,22 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(!savedLogin.equals("") && !savedPass.equals("")){
+        if(!savedLogin.equals("") && !savedPass.equals("") || savedAdmin){
             navigationView.getMenu().clear();
             navigationView.inflateMenu(R.menu.menu_logout);
 
-            //navigationView.setCheckedItem(R.id.nav_account);
             NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
                 @Override
                 public void onSuccess(SubUnsubCombine value) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new UserAccountFragment(value.getSubscribedDocs(), value.getUnsubscribedDocs())).commit();
                     toolbar.setTitle("Документы");
+                }
+
+                @Override
+                public void onAdminSuccess(List<AdminDocHistory> value) {
+                    // Почему это пусто?!
+                    toolbar.setTitle("Статистика");
                 }
 
                 @Override
@@ -139,6 +150,14 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     @Override
+                    public void onAdminSuccess(List<AdminDocHistory> value) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new AdminAccountFragment(value)).commit();
+                        navigationView.getMenu().clear();
+                        navigationView.inflateMenu(R.menu.menu_account);
+                    }
+
+                    @Override
                     public void onFailure() {
 
                     }
@@ -148,6 +167,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("login", "");
                 editor.putString("pass", "");
+                editor.putBoolean("admin", false);
                 editor.apply();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(navigationView)).commit();
                 toolbar.setTitle("Вход");
@@ -162,22 +182,37 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_news:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewsFragment()).commit();
                 toolbar.setTitle("Новости");
+                if(isLoggedIn()) {
+                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+                }
 //                navigationView.getMenu().clear();
 //                navigationView.inflateMenu(R.menu.menu_logout);
                 break;
             case R.id.nav_schedule:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ScheduleFragment()).commit();
                 toolbar.setTitle("Расписание занятий");
+                if(isLoggedIn()) {
+                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+                }
                 break;
             case R.id.nav_food_menu:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MenuFragment()).commit();
                 toolbar.setTitle("Меню столовой");
+                if(isLoggedIn()) {
+                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+                }
                 break;
             case R.id.nav_contacts:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ContactFragment()).commit();
                 toolbar.setTitle("Контакты");
+                if(isLoggedIn()) {
+                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+                }
                 break;
             case R.id.nav_dark_mode:
+                if(isLoggedIn()) {
+                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+                }
                 item.setActionView(R.layout.theme_switch);
                 Switch themeSwitch = item.getActionView().findViewById(R.id.action_switch);
                 if(loadState() == true){
@@ -201,6 +236,15 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private Boolean isLoggedIn(){
+        savedLogin = sharedPref.getString("login", "");
+        savedPass = sharedPref.getString("pass", "");
+        if(!savedPass.equals("") && !savedPass.equals("")){
+            return true;
+        }
+        return false;
     }
 
     private void saveState(Boolean state){

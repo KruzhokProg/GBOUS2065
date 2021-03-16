@@ -18,12 +18,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/contactItemConstraintLayout"
+            android:id="@+id/adminDocItemConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvContactPosition"
+                android:id="@+id/tvTitleAdmin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -33,21 +33,21 @@
                 android:text="Директор"
                 android:textColor="?attr/cardBackgroundRvItem"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/imgvArrowContactExpand"
+                app:layout_constraintEnd_toStartOf="@+id/imgvArrowAdminDocExpand"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/expandableLayout"
+                android:id="@+id/expandableLayoutDocAdmin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvContactPosition">
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleAdmin">
 
                 <TextView
-                    android:id="@+id/tvContactName"
+                    android:id="@+id/tvAdminDocType"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -72,8 +72,8 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tvContactName"
-                    app:layout_constraintTop_toBottomOf="@+id/tvContactName" />
+                    app:layout_constraintStart_toStartOf="@+id/tvAdminDocType"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocType" />
 
                 <TextView
                     android:id="@+id/tvContactPhone"
@@ -137,12 +137,12 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
-                android:id="@+id/imgvArrowContactExpand"
+                android:id="@+id/imgvArrowAdminDocExpand"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvContactPosition"
+                app:layout_constraintTop_toTopOf="@+id/tvTitleAdmin"
                 app:srcCompat="@drawable/ic_arrow_down" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

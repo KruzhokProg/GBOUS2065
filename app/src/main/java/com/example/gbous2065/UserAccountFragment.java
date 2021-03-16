@@ -33,7 +33,7 @@ public class UserAccountFragment extends Fragment {
     public UserAccountFragment(){
     }
 
-    public UserAccountFragment(List<UserDocFragment> subDocs, List<UserDocFragment> unsubDocs) {
+    public UserAccountFragment(List<UserDocFragment> subDocs, List<UserDocFragment> unsubDocs){
         this.subDocs = subDocs;
         this.unsubDocs = unsubDocs;
     }

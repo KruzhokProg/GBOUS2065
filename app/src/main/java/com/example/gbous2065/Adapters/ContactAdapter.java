@@ -1,11 +1,8 @@
 package com.example.gbous2065.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gbous2065.Models.Contact;
-import com.example.gbous2065.Models.News;
 import com.example.gbous2065.R;
 
 import java.util.List;
@@ -85,14 +81,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvContactName = itemView.findViewById(R.id.tvContactName);
-            tvContactPosition = itemView.findViewById(R.id.tvContactPosition);
+            tvContactName = itemView.findViewById(R.id.tvAdminDocType);
+            tvContactPosition = itemView.findViewById(R.id.tvTitleAdmin);
             tvContactEmail = itemView.findViewById(R.id.tvContactEmail);
             tvContactPhone = itemView.findViewById(R.id.tvContactPhone);
             tvContactAdress = itemView.findViewById(R.id.tvContactAdress);
-            expandableLayout = itemView.findViewById(R.id.expandableLayout);
-            imgvArrowContact = itemView.findViewById(R.id.imgvArrowContactExpand);
-            contactItemConstraintLayout = itemView.findViewById(R.id.contactItemConstraintLayout);
+            expandableLayout = itemView.findViewById(R.id.expandableLayoutDocAdmin);
+            imgvArrowContact = itemView.findViewById(R.id.imgvArrowAdminDocExpand);
+            contactItemConstraintLayout = itemView.findViewById(R.id.adminDocItemConstraintLayout);
             imgvMap = itemView.findViewById(R.id.imgvContactMap);
             imgvPhone = itemView.findViewById(R.id.imgvContactPhone);
             imgvEmail = itemView.findViewById(R.id.imgvContactEmail);

@@ -1,5 +1,6 @@
 package com.example.gbous2065.Network;
 
+import com.example.gbous2065.Models.AdminAccount;
 import com.example.gbous2065.Models.AllFiles;
 import com.example.gbous2065.Models.FileDownload;
 import com.example.gbous2065.Models.News;
@@ -61,4 +62,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("user.php")
     Call<UserAccount> getUserInfo(@Field("user") String email, @Field("passwd") String passwd);
+
+    @GET("docs_stat.php")
+    Call<AdminAccount> getUserStat();
 }

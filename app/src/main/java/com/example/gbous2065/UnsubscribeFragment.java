@@ -39,7 +39,7 @@ public class UnsubscribeFragment extends Fragment {
         rv = view.findViewById(R.id.rvUnsubDocs);
         UserDocFragment newUserDoc = new UserDocFragment();
         newUserDoc.setTitle("Новый приказ на подпись");
-        newUserDoc.setDateEnd("10-03-2021");
+        newUserDoc.setDateEnd("15-03-2021");
         newUserDoc.setStatus("Открытие докумета");
         unsubDocs.add(newUserDoc);
         adapter = new UserDocAdapter(getContext(), unsubDocs);

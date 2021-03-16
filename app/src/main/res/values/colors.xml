@@ -22,4 +22,6 @@
 
     <color name="expired">#ff2b2b</color>
 
+    <color name="chipBackGround">#1E656D</color>
+
 </resources>

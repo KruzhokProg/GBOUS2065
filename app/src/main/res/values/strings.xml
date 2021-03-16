@@ -5,4 +5,5 @@
     <string name="mylorem">orem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit orci ac nisi convallis, non pellentesque orci ullamcorper. Donec ac eros lacinia, scelerisque nibh eu, lobortis sem. Nunc dapibus sapien ut eros mollis fermentum. Integer augue quam, consequat quis lorem nec, vestibulum mollis leo.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="secret">8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918</string>
 </resources>
