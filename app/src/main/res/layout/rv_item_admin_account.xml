@@ -10,12 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         app:cardBackgroundColor="?attr/cardBackgroundRvItem"
         app:cardCornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/adminDocItemConstraintLayout"
@@ -120,18 +122,18 @@
                     app:layout_constraintStart_toStartOf="@+id/tvAdminDocFunc"
                     app:layout_constraintTop_toBottomOf="@+id/chipGroupDocFunc" />
 
-                <TextView
-                    android:id="@+id/tvAdminDocReceivers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:text="Получатели:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="@+id/chipGroupDocPlaces"
-                    app:layout_constraintStart_toStartOf="@+id/chipGroupDocPlaces"
-                    app:layout_constraintTop_toBottomOf="@+id/chipGroupDocPlaces" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tvAdminDocReceivers"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:fontFamily="@font/montserrat_regular"-->
+<!--                    android:text="Получатели:"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="15sp"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/chipGroupDocPlaces"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/chipGroupDocPlaces"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/chipGroupDocPlaces" />-->
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupDocFunc"
@@ -162,23 +164,23 @@
 <!--                        app:chipBackgroundColor="#1E656D" />-->
                 </com.google.android.material.chip.ChipGroup>
 
-                <HorizontalScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:singleLine="true"
-                    android:layout_marginTop="5dp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvAdminDocReceivers"
-                    app:layout_constraintStart_toStartOf="@+id/tvAdminDocReceivers"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocReceivers"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="10dp">
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupDocUsers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:singleLine="true">
-                </com.google.android.material.chip.ChipGroup>
-                </HorizontalScrollView>
+<!--                <HorizontalScrollView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:singleLine="true"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/tvAdminDocReceivers"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/tvAdminDocReceivers"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocReceivers"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    android:layout_marginBottom="10dp">-->
+<!--                <com.google.android.material.chip.ChipGroup-->
+<!--                    android:id="@+id/chipGroupDocUsers"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:singleLine="true">-->
+<!--                </com.google.android.material.chip.ChipGroup>-->
+<!--                </HorizontalScrollView>-->
 
                 <ImageView
                     android:id="@+id/imgvPieChart"

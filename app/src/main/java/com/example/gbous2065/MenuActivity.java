@@ -241,7 +241,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private Boolean isLoggedIn(){
         savedLogin = sharedPref.getString("login", "");
         savedPass = sharedPref.getString("pass", "");
-        if(!savedPass.equals("") && !savedPass.equals("")){
+        savedAdmin = sharedPref.getBoolean("admin", false);
+        if(!savedLogin.equals("") && !savedPass.equals("") || savedAdmin){
             return true;
         }
         return false;

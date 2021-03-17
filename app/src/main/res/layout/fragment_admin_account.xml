@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AdminAccountFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".AdminAccountFragment">
@@ -34,27 +32,38 @@
 
                     <EditText
                         android:id="@+id/et_admin_search"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="?attr/actionBarSize"
                         android:background="@drawable/search_input_style"
                         android:drawableLeft="@drawable/ic_search_black_24dp"
-                        android:hint="Поиск"
+                        android:hint="Поиск по приказам"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/img_btn_record_admin"
+                        app:layout_constraintEnd_toStartOf="@id/switchMode"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageButton
-                        android:id="@+id/img_btn_record_admin"
+                    <Switch
+                        android:id="@+id/switchMode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
-                        android:background="@color/card_bg_color"
-                        android:src="@drawable/ic_mic_black_24dp"
+                        android:trackTint="#1E656D"
+                        android:thumbTint="#00293C"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:layout_editor_absoluteY="7dp" />
+                        />
+
+                    <!--                    <ImageButton-->
+<!--                        android:id="@+id/img_btn_record_admin"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        android:background="@color/card_bg_color"-->
+<!--                        android:src="@drawable/ic_mic_black_24dp"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        tools:layout_editor_absoluteY="7dp" />-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>

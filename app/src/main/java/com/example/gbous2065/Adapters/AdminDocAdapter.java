@@ -118,18 +118,18 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
             }
 
 
-            if(stat.getReceivers() != null){
-                String[] receiversMas = stat.getReceivers().split(", ");
-                holder.chipGroupDocUsers.removeAllViews();
-
-                for (String item : receiversMas) {
-                    Chip chip = new Chip(context);
-                    chip.setText(item);
-                    chip.setChipBackgroundColorResource(R.color.chipBackGround);
-                    chip.setTextColor(context.getResources().getColor(R.color.white));
-                    holder.chipGroupDocUsers.addView(chip);
-                }
-            }
+//            if(stat.getReceivers() != null){
+//                String[] receiversMas = stat.getReceivers().split(", ");
+//                holder.chipGroupDocUsers.removeAllViews();
+//
+//                for (String item : receiversMas) {
+//                    Chip chip = new Chip(context);
+//                    chip.setText(item);
+//                    chip.setChipBackgroundColorResource(R.color.chipBackGround);
+//                    chip.setTextColor(context.getResources().getColor(R.color.white));
+//                    holder.chipGroupDocUsers.addView(chip);
+//                }
+//            }
         }
         else{
 
@@ -166,7 +166,7 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
             tvDocFunc = itemView.findViewById(R.id.tvAdminDocType);
             chipGroupDocFunc = itemView.findViewById(R.id.chipGroupDocFunc);
             chipGroupDocPlaces = itemView.findViewById(R.id.chipGroupDocPlaces);
-            chipGroupDocUsers = itemView.findViewById(R.id.chipGroupDocUsers);
+//            chipGroupDocUsers = itemView.findViewById(R.id.chipGroupDocUsers);
             imgvExpandArrow = itemView.findViewById(R.id.imgvArrowAdminDocExpand);
             imgvPieChartStat = itemView.findViewById(R.id.imgvPieChart);
             expandableLayoutDocAdmin = itemView.findViewById(R.id.expandableLayoutDocAdmin);
