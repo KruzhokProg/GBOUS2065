@@ -18,7 +18,13 @@ import android.widget.Switch;
 import com.example.gbous2065.Adapters.AdminDocAdapter;
 import com.example.gbous2065.Models.AdminDocHistory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class AdminAccountFragment extends Fragment {
@@ -48,6 +54,20 @@ public class AdminAccountFragment extends Fragment {
         rvUserStatistics = view.findViewById(R.id.rv_admin_data);
         switchMode = view.findViewById(R.id.switchMode);
         pbLoad = view.findViewById(R.id.progress_bar_admin);
+
+        //data.sort(AdminDocHistory.compareByDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+
+        for (AdminDocHistory item : data) {
+            try {
+                item.setDateReal(sdf.parse(item.getDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Collections.sort(data, (o1, o2) -> o2.getId() - o1.getId());
+
         AdminDocAdapter adapter = new AdminDocAdapter(data);
         rvUserStatistics.setAdapter(adapter);
 
@@ -79,6 +99,7 @@ public class AdminAccountFragment extends Fragment {
                             filtered.add(item);
                         }
                     }
+
                     pbLoad.setVisibility(View.INVISIBLE);
                     AdminDocAdapter adapter = new AdminDocAdapter(filtered);
                     rvUserStatistics.setAdapter(adapter);

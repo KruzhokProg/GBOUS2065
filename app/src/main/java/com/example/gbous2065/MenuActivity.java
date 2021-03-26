@@ -26,6 +26,7 @@ import com.example.gbous2065.Models.AdminDocHistory;
 import com.example.gbous2065.Models.CustomCallback;
 import com.example.gbous2065.Models.SubUnsubCombine;
 import com.example.gbous2065.Utils.NetworkDownload;
+import com.example.gbous2065.Utils.NetworkUtil;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     ImageView logoImage;
     SharedPreferences sharedPref;
     String savedLogin, savedPass;
-    Boolean savedAdmin;
+    Boolean savedAdmin, isEnternetAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // check internet
+        isEnternetAvailable = NetworkUtil.isEnternetAvailable(this);
 
         if(loadState() == true){
             navigationView.inflateHeaderView(R.layout.header_black);
