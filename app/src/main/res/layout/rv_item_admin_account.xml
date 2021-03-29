@@ -58,12 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDateAdmin"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="1.0">
 
                 <TextView
@@ -76,7 +77,7 @@
                     android:text="Тип документа 2"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@+id/imgvPieChart"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,7 +91,7 @@
                     android:text="Бухгалтерия"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@+id/imgvPieChart"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tvAdminDocType"
                     app:layout_constraintTop_toBottomOf="@+id/tvAdminDocType" />
 
@@ -122,29 +123,28 @@
                     app:layout_constraintStart_toStartOf="@+id/tvAdminDocFunc"
                     app:layout_constraintTop_toBottomOf="@+id/chipGroupDocFunc" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tvAdminDocReceivers"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:fontFamily="@font/montserrat_regular"-->
-<!--                    android:text="Получатели:"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="15sp"-->
-<!--                    app:layout_constraintEnd_toEndOf="@+id/chipGroupDocPlaces"-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/chipGroupDocPlaces"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/chipGroupDocPlaces" />-->
+                <!--                <TextView-->
+                <!--                    android:id="@+id/tvAdminDocReceivers"-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:fontFamily="@font/montserrat_regular"-->
+                <!--                    android:text="Получатели:"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textSize="15sp"-->
+                <!--                    app:layout_constraintEnd_toEndOf="@+id/chipGroupDocPlaces"-->
+                <!--                    app:layout_constraintStart_toStartOf="@+id/chipGroupDocPlaces"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/chipGroupDocPlaces" />-->
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupDocFunc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintHorizontal_bias="0.501"
                     app:layout_constraintEnd_toEndOf="@id/tvAdminDocFunc"
+                    app:layout_constraintHorizontal_bias="0.501"
                     app:layout_constraintStart_toStartOf="@id/tvAdminDocFunc"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocFunc">
-                </com.google.android.material.chip.ChipGroup>
+                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocFunc"></com.google.android.material.chip.ChipGroup>
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupDocPlaces"
@@ -155,42 +155,51 @@
                     app:layout_constraintHorizontal_bias="0.501"
                     app:layout_constraintStart_toStartOf="@+id/tvAdminDocPlaces"
                     app:layout_constraintTop_toBottomOf="@+id/tvAdminDocPlaces">
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip7"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Ш1"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        app:chipBackgroundColor="#1E656D" />-->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip7"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:text="Ш1"-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        app:chipBackgroundColor="#1E656D" />-->
                 </com.google.android.material.chip.ChipGroup>
 
-<!--                <HorizontalScrollView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:singleLine="true"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    app:layout_constraintEnd_toEndOf="@+id/tvAdminDocReceivers"-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/tvAdminDocReceivers"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocReceivers"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    android:layout_marginBottom="10dp">-->
-<!--                <com.google.android.material.chip.ChipGroup-->
-<!--                    android:id="@+id/chipGroupDocUsers"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:singleLine="true">-->
-<!--                </com.google.android.material.chip.ChipGroup>-->
-<!--                </HorizontalScrollView>-->
+                <!--                <HorizontalScrollView-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    app:singleLine="true"-->
+                <!--                    android:layout_marginTop="5dp"-->
+                <!--                    app:layout_constraintEnd_toEndOf="@+id/tvAdminDocReceivers"-->
+                <!--                    app:layout_constraintStart_toStartOf="@+id/tvAdminDocReceivers"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/tvAdminDocReceivers"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    android:layout_marginBottom="10dp">-->
+                <!--                <com.google.android.material.chip.ChipGroup-->
+                <!--                    android:id="@+id/chipGroupDocUsers"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    app:singleLine="true">-->
+                <!--                </com.google.android.material.chip.ChipGroup>-->
+                <!--                </HorizontalScrollView>-->
 
                 <ImageView
                     android:id="@+id/imgvPieChart"
                     android:layout_width="54dp"
                     android:layout_height="53dp"
-                    android:layout_marginEnd="20dp"
-                    app:layout_constraintBottom_toTopOf="@+id/tvAdminDocFunc"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="13dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroupDocPlaces"
                     app:srcCompat="@drawable/ic_piechart" />
+
+                <ImageView
+                    android:id="@+id/imgvSendNotification"
+                    android:layout_width="54dp"
+                    android:layout_height="53dp"
+                    android:layout_marginStart="15dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgvPieChart"
+                    app:layout_constraintTop_toTopOf="@+id/imgvPieChart"
+                    app:srcCompat="@drawable/ic_notification" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -51,7 +51,6 @@ public class LoginFragment extends Fragment {
     Button btnSignIn;
     TextInputEditText etEmail, etPass;
     String email, pass, loginEncrypted, passwordEncrypted;
-    String temp="";
     SharedPreferences sharedPreferences;
     NavigationView navigationView;
 

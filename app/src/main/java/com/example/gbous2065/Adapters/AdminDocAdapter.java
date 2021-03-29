@@ -8,12 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gbous2065.Models.AdminDocHistory;
+import com.example.gbous2065.Models.FcmResponse;
+import com.example.gbous2065.Models.Notification;
+import com.example.gbous2065.Models.NotificationSender;
+import com.example.gbous2065.Network.ApiGoogleService;
+import com.example.gbous2065.Network.FcmClient;
 import com.example.gbous2065.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
@@ -26,9 +32,17 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.AdminDocViewHolder>{
 
@@ -60,6 +74,56 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
         if(isExpanded == true) {
             holder.expandableLayoutDocAdmin.setVisibility(View.VISIBLE);
             holder.imgvExpandArrow.setImageResource(R.drawable.ic_arrow_up_black);
+
+
+            holder.imgvNotification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (stat.getReceivers() != null) {
+                        ApiGoogleService apiGoogleService = FcmClient.getClient("https://fcm.googleapis.com/").create(ApiGoogleService.class);
+                        String[] receivers = stat.getReceivers().split(", ");
+                        List<String> ids = new ArrayList<>();
+                        for (String receiver : receivers) {
+                            String receiverId = receiver.substring(receiver.indexOf("(") + 1, receiver.indexOf(")"));
+                            ids.add(receiverId);
+                        }
+
+                        for (String receiverId : ids) {
+
+                            FirebaseDatabase.getInstance().getReference().child("Tokens").child(receiverId).child("token")
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String userToken = snapshot.getValue(String.class);
+
+                                            NotificationSender notificationSender = new NotificationSender();
+                                            notificationSender.setTo(userToken);
+                                            notificationSender.setNotification(new Notification("Новый документ на подпись", stat.getTitle()));
+
+                                            Call<FcmResponse> call = apiGoogleService.sendNotification(notificationSender);
+                                            call.enqueue(new Callback<FcmResponse>() {
+                                                @Override
+                                                public void onResponse(Call<FcmResponse> call, Response<FcmResponse> response) {
+                                                    Toast.makeText(context, "Уведомление отправлено", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<FcmResponse> call, Throwable t) {
+
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                        }
+                    }
+                }
+
+            });
 
             holder.imgvPieChartStat.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,7 +216,7 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
 
         public TextView tvTitle, tvDate, tvDocType, tvDocSubject, tvDocFunc;
         ChipGroup chipGroupDocFunc, chipGroupDocPlaces, chipGroupDocUsers;
-        ImageView imgvExpandArrow, imgvPieChartStat;
+        ImageView imgvExpandArrow, imgvPieChartStat, imgvNotification;
         ConstraintLayout expandableLayoutDocAdmin, adminDocItemConstraintLayout;
 
 
@@ -169,6 +233,7 @@ public class AdminDocAdapter  extends RecyclerView.Adapter<AdminDocAdapter.Admin
 //            chipGroupDocUsers = itemView.findViewById(R.id.chipGroupDocUsers);
             imgvExpandArrow = itemView.findViewById(R.id.imgvArrowAdminDocExpand);
             imgvPieChartStat = itemView.findViewById(R.id.imgvPieChart);
+            imgvNotification = itemView.findViewById(R.id.imgvSendNotification);
             expandableLayoutDocAdmin = itemView.findViewById(R.id.expandableLayoutDocAdmin);
             adminDocItemConstraintLayout = itemView.findViewById(R.id.adminDocItemConstraintLayout);
 

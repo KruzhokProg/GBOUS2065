@@ -2,8 +2,11 @@ package com.example.gbous2065.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.renderscript.Script;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.gbous2065.AdminAccountFragment;
@@ -19,9 +22,19 @@ import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiUserAccountClient;
 import com.example.gbous2065.R;
 import com.example.gbous2065.UserAccountFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -125,6 +138,42 @@ public class NetworkDownload {
                     } else {
 
                         if (userInfo.length > 0) {
+                            // Запись UserId и Токена в FRD
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            Query query = rootRef.child("Tokens").equalTo(user.getId());
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.exists()){
+                                        DatabaseReference reference = FirebaseDatabase.getInstance()
+                                                .getReference("Tokens").child(user.getId());
+
+                                        FirebaseMessaging.getInstance().getToken()
+                                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<String> task) {
+                                                        String token = task.getResult();
+
+                                                        HashMap<String, String> hashMap = new HashMap<>();
+                                                        hashMap.put("token", token);
+
+                                                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                //Toast.makeText(context, "token: " + token, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                             String loginEncrypted = Crypto.base64Encode(login);
                             String passwordEncrypted = Crypto.base64Encode(pass);
                             sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);

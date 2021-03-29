@@ -48,8 +48,8 @@ public class UserAccountFragment extends Fragment {
 
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
 
-        pagerAdapter.addFragment(new SubscribeFragment(subDocs), "Подписанные");
         pagerAdapter.addFragment(new UnsubscribeFragment(unsubDocs), "Неподписанные");
+        pagerAdapter.addFragment(new SubscribeFragment(subDocs), "Подписанные");
 
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);

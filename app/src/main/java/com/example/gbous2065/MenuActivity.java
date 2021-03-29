@@ -44,7 +44,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(loadState() == true){
+        if(loadState()){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             setTheme(R.style.DarkTheme_GBOUS2065);
         }
