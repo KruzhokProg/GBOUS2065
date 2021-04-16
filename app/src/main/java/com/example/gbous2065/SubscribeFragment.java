@@ -40,11 +40,11 @@ public class SubscribeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_subscribe, container, false);
         rv = view.findViewById(R.id.rvSubDocs);
-        UserDocFragment newUserDoc = new UserDocFragment();
-        newUserDoc.setTitle("Приказ на подпись");
-        newUserDoc.setDateEnd("10-03-2021");
-        newUserDoc.setStatus("Подписание документа");
-        subDocs.add(newUserDoc);
+//        UserDocFragment newUserDoc = new UserDocFragment();
+//        newUserDoc.setTitle("Приказ на подпись");
+//        newUserDoc.setDateEnd("10-03-2021");
+//        newUserDoc.setStatus("Подписание документа");
+//        subDocs.add(newUserDoc);
         adapter = new UserDocAdapter(getContext(), subDocs);
         rv.setAdapter(adapter);
         return view;

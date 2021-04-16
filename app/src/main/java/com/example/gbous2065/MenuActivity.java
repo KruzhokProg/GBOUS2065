@@ -91,16 +91,16 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
             NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
                 @Override
-                public void onSuccess(SubUnsubCombine value) {
+                public void onSuccess(SubUnsubCombine value, String mode) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new UserAccountFragment(value.getSubscribedDocs(), value.getUnsubscribedDocs())).commit();
                     toolbar.setTitle("Документы");
                 }
 
                 @Override
-                public void onAdminSuccess(List<AdminDocHistory> value) {
+                public void onAdminSuccess(List<AdminDocHistory> value, String mode) {
                     // Почему это пусто?!
-                    toolbar.setTitle("Статистика");
+                    toolbar.setTitle("Документы");
                 }
 
                 @Override
@@ -137,6 +137,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 //        navigationView.getMenu().findItem(itemId).setVisible(visible);
 //    }
 
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -145,20 +151,22 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_employee:
                 NetworkDownload.getDataAndGo(this, getSupportFragmentManager(), navigationView, "cache", new CustomCallback() {
                     @Override
-                    public void onSuccess(SubUnsubCombine value) {
+                    public void onSuccess(SubUnsubCombine value, String mode) {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                                 new UserAccountFragment(value.getSubscribedDocs(), value.getUnsubscribedDocs())).commit();
                         String fullName = value.getFullName();
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.menu_account);
+                        toolbar.setTitle("Документы");
                     }
 
                     @Override
-                    public void onAdminSuccess(List<AdminDocHistory> value) {
+                    public void onAdminSuccess(List<AdminDocHistory> value, String mode) {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new AdminAccountFragment(value)).commit();
+                                new AdminAccountFragment(value, mode)).commit();
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.menu_account);
+                        toolbar.setTitle("Документы");
                     }
 
                     @Override
@@ -213,29 +221,29 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
                 }
                 break;
-            case R.id.nav_dark_mode:
-                if(isLoggedIn()) {
-                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
-                }
-                item.setActionView(R.layout.theme_switch);
-                Switch themeSwitch = item.getActionView().findViewById(R.id.action_switch);
-                if(loadState() == true){
-                    themeSwitch.setChecked(true);
-                }
-                themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked){
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            saveState(true);
-                        }
-                        else{
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            saveState(false);
-                        }
-                    }
-                });
-                return false;
+//            case R.id.nav_dark_mode:
+//                if(isLoggedIn()) {
+//                    navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);
+//                }
+//                item.setActionView(R.layout.theme_switch);
+//                Switch themeSwitch = item.getActionView().findViewById(R.id.action_switch);
+//                if(loadState() == true){
+//                    themeSwitch.setChecked(true);
+//                }
+//                themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                    @Override
+//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                        if(isChecked){
+//                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//                            saveState(true);
+//                        }
+//                        else{
+//                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                            saveState(false);
+//                        }
+//                    }
+//                });
+//                return false;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

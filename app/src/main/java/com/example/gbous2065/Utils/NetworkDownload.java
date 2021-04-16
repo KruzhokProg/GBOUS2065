@@ -49,213 +49,244 @@ public class NetworkDownload {
     public static void getDataAndGo(Context context, FragmentManager fragmentManager, NavigationView navigationView, String mode,
                                     CustomCallback customCallback, String... userInfo){
         String loginEncrypted="", passwordEncrypted="";
-        String login, pass;
+        String login = null, pass = null;
         SharedPreferences sharedPreferences;
         Boolean isAdmin = false;
 
-        if(userInfo.length > 0){
-            login = userInfo[0];
-            pass = userInfo[1];
-
-            String savedLogin = Crypto.getSHA256(login);
-            String savedPass = Crypto.getSHA256(pass);
-
-            if(savedLogin.equals(context.getResources().getString(R.string.secret))
-                    && savedPass.equals(context.getResources().getString(R.string.secret))){
-                isAdmin = true;
-                sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("admin", isAdmin);
-                editor.apply();
-            }
-        }
-        else{
-            sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-            loginEncrypted = sharedPreferences.getString("login", "");
-            passwordEncrypted = sharedPreferences.getString("pass", "");
-            isAdmin = sharedPreferences.getBoolean("admin", false);
-
-            if(loginEncrypted.equals(context.getResources().getString(R.string.secret))
-                && passwordEncrypted.equals(context.getResources().getString(R.string.secret))){
-                isAdmin = true;
-            }
-
-            login = Crypto.base64Decode(loginEncrypted);
-            pass = Crypto.base64Decode(passwordEncrypted);
-
-
-        }
-
-        if(isAdmin){
-
-            ApiService apiService = ApiUserAccountClient.getClient().create(ApiService.class);
-            Call<AdminAccount> call = apiService.getUserStat();
-            call.enqueue(new Callback<AdminAccount>() {
-                @Override
-                public void onResponse(Call<AdminAccount> call, Response<AdminAccount> response) {
-                    AdminAccount statistics = response.body();
-                    List<AdminDocHistory> adminDocHistories = new ArrayList<>();
-                    for (Map<String, AdminDocHistory> item : statistics.getDocs()) {
-                        Set<String> keys = item.keySet();
-                        for (String s : keys) {
-                            AdminDocHistory adminDocHistory = item.get(s);
-                            adminDocHistories.add(adminDocHistory);
-                        }
-                    }
-
-                    if (mode.equals("login")) {
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(adminDocHistories)).commit();
-                    }
-                    else if(mode.equals("cache")){
-                        customCallback.onAdminSuccess(adminDocHistories);
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(adminDocHistories)).commit();
-                    }
-
-                    String fullName = "Администратор";
-                    navigationView.getMenu().clear();
-                    navigationView.inflateMenu(R.menu.menu_account);
-                    navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
-                }
-
-                @Override
-                public void onFailure(Call<AdminAccount> call, Throwable t) {
-                    Toast.makeText(context, "Неверные данные", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if(!mode.equals("cache") && (userInfo[0].isEmpty() || userInfo[1].isEmpty())){
+            Toast.makeText(context, "Заполните все поля!", Toast.LENGTH_SHORT).show();
         }
         else {
-            ApiService apiService = ApiUserAccountClient.getClient().create(ApiService.class);
-            Call<UserAccount> call = apiService.getUserInfo(login, pass);
-            call.enqueue(new Callback<UserAccount>() {
-                @Override
-                public void onResponse(Call<UserAccount> call, Response<UserAccount> response) {
-                    SharedPreferences sharedPreferences;
-                    UserAccount user = response.body();
-                    if (user.getError() != null) {
-                        Toast.makeText(context, "Доступ отказан", Toast.LENGTH_SHORT).show();
-                    } else if (user.getId() == null) {
-                        Toast.makeText(context, "Некорректные данные", Toast.LENGTH_SHORT).show();
-                    } else {
+            if (userInfo.length > 0) {
+                login = userInfo[0];
+                pass = userInfo[1];
 
-                        if (userInfo.length > 0) {
-                            // Запись UserId и Токена в FRD
-                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                            Query query = rootRef.child("Tokens").equalTo(user.getId());
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(!snapshot.exists()){
-                                        DatabaseReference reference = FirebaseDatabase.getInstance()
-                                                .getReference("Tokens").child(user.getId());
+                String savedLogin = Crypto.getSHA256(login);
+                String savedPass = Crypto.getSHA256(pass);
 
-                                        FirebaseMessaging.getInstance().getToken()
-                                                .addOnCompleteListener(new OnCompleteListener<String>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<String> task) {
-                                                        String token = task.getResult();
+                if (savedLogin.equals(context.getResources().getString(R.string.secret))
+                        && savedPass.equals(context.getResources().getString(R.string.secret))) {
+                    isAdmin = true;
+                    sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("admin", isAdmin);
+                    editor.apply();
+                }
+            } else {
+                sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                loginEncrypted = sharedPreferences.getString("login", "");
+                passwordEncrypted = sharedPreferences.getString("pass", "");
+                isAdmin = sharedPreferences.getBoolean("admin", false);
 
-                                                        HashMap<String, String> hashMap = new HashMap<>();
-                                                        hashMap.put("token", token);
+                if (loginEncrypted.equals(context.getResources().getString(R.string.secret))
+                        && passwordEncrypted.equals(context.getResources().getString(R.string.secret))) {
+                    isAdmin = true;
+                }
 
-                                                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                //Toast.makeText(context, "token: " + token, Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                    }
-                                }
+                login = Crypto.base64Decode(loginEncrypted);
+                pass = Crypto.base64Decode(passwordEncrypted);
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
+            }
 
-                            String loginEncrypted = Crypto.base64Encode(login);
-                            String passwordEncrypted = Crypto.base64Encode(pass);
-                            sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login", loginEncrypted);
-                            editor.putString("pass", passwordEncrypted);
-                            editor.apply();
-                        }
+            if (isAdmin) {
 
-                        List<UserDoc> userDocList = new ArrayList<>();
-                        List<UserDocHistory> userDocHistories = new ArrayList<>();
-                        for (Map<String, UserDoc> item : user.getDocs()) {
-                            Set<String> keys = item.keySet();
-                            for (String s : keys) {
-                                UserDoc userDoc = item.get(s);
-                                userDocList.add(userDoc);
-                            }
-                        }
-
-                        for (Map<String, UserDocHistory> item : user.getDocsHistory()) {
-                            Set<String> keys = item.keySet();
-                            for (String s : keys) {
-                                UserDocHistory userDocHistory = item.get(s);
-                                userDocHistories.add(userDocHistory);
-                            }
-                        }
-                        // Распределяем подписанные и неподписанные документы
-                        List<UserDocFragment> subscribedDocs = new ArrayList<>();
-                        List<UserDocFragment> unsubscribedDocs = new ArrayList<>();
-                        for (UserDoc userDoc : userDocList) {
-                            String latest = "1900-01-01 09:00:00";
-                            String status = "";
-                            Integer docId = -1;
-                            String title = "";
-                            String dateEnd = "";
-                            String file = "", subLink = "", unsubLink = "";
-                            for (UserDocHistory userDocHistory : userDocHistories) {
-                                if (userDocHistory.getId() == userDoc.getId()) {
-                                    if (DateTimeDifference.startLaterThanEnd(userDocHistory.getDate(), latest, "login")) {
-                                        latest = userDocHistory.getDate();
-                                        status = userDocHistory.getTitle();
-                                        docId = userDocHistory.getId();
-                                        title = userDoc.getTitle();
-                                        dateEnd = userDoc.getEndDate();
-                                        file = userDoc.getFile();
-                                        subLink = userDoc.getSubLink();
-                                        unsubLink = userDoc.getUnsubLink();
-                                    }
+                ApiService apiService = ApiUserAccountClient.getClient().create(ApiService.class);
+                Call<AdminAccount> call = apiService.getUserStat();
+                call.enqueue(new Callback<AdminAccount>() {
+                    @Override
+                    public void onResponse(Call<AdminAccount> call, Response<AdminAccount> response) {
+                        AdminAccount statistics = response.body();
+                        if (statistics != null) {
+                            List<AdminDocHistory> adminDocHistories = new ArrayList<>();
+                            for (Map<String, AdminDocHistory> item : statistics.getDocs()) {
+                                Set<String> keys = item.keySet();
+                                for (String s : keys) {
+                                    AdminDocHistory adminDocHistory = item.get(s);
+                                    adminDocHistories.add(adminDocHistory);
                                 }
                             }
 
-                            UserDocFragment userDocFragment;
-                            if (status.equals("Подписание документа") && docId != -1) {
-                                userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
-                                subscribedDocs.add(userDocFragment);
-                            } else if (docId != -1) {
-                                userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
-                                unsubscribedDocs.add(userDocFragment);
+                            if (mode.equals("login")) {
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(adminDocHistories,"data")).commit();
+                            } else if (mode.equals("cache")) {
+                                customCallback.onAdminSuccess(adminDocHistories,"data");
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(adminDocHistories,"data")).commit();
                             }
+
+                            String fullName = "Администратор";
+                            navigationView.getMenu().clear();
+                            navigationView.inflateMenu(R.menu.menu_account);
+                            navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
                         }
+                        else{ // если нет данных
+                            if (mode.equals("login")) {
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(null, "empty")).commit();
+                            } else if (mode.equals("cache")) {
+                                customCallback.onAdminSuccess(null, "empty");
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, new AdminAccountFragment(null, "empty")).commit();
+                            }
 
-
-                        if (mode.equals("login")) {
-                            fragmentManager.beginTransaction().replace(R.id.fragment_container, new UserAccountFragment(subscribedDocs, unsubscribedDocs)).commit();
-                        } else if (mode.equals("cache")) {
-                            String fullName = user.getSurname() + " " + user.getName() + " " + user.getPatronymic();
-                            SubUnsubCombine subUnsubCombine = new SubUnsubCombine(fullName, subscribedDocs, unsubscribedDocs);
-                            customCallback.onSuccess(subUnsubCombine);
+                            String fullName = "Администратор";
+                            navigationView.getMenu().clear();
+                            navigationView.inflateMenu(R.menu.menu_account);
+                            navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
                         }
-
-                        String fullName = user.getSurname() + " " + user.getName().substring(0, 1) + ". " + user.getPatronymic().substring(0, 1) + ".";
-                        navigationView.getMenu().clear();
-                        navigationView.inflateMenu(R.menu.menu_account);
-                        navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
                     }
-                }
 
-                @Override
-                public void onFailure(Call<UserAccount> call, Throwable t) {
-                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<AdminAccount> call, Throwable t) {
+                        Toast.makeText(context, "Неверные данные", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                ApiService apiService = ApiUserAccountClient.getClient().create(ApiService.class);
+                Call<UserAccount> call = apiService.getUserInfo(login, pass);
+                String finalLogin = login;
+                String finalPass = pass;
+                call.enqueue(new Callback<UserAccount>() {
+                    @Override
+                    public void onResponse(Call<UserAccount> call, Response<UserAccount> response) {
+                        SharedPreferences sharedPreferences;
+                        UserAccount user = response.body();
+                        if (user.getError() != null) {
+                            Toast.makeText(context, "Доступ отказан", Toast.LENGTH_SHORT).show();
+                        } else if (user.getId() == null) {
+                            Toast.makeText(context, "Некорректные данные", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            if (userInfo.length > 0) {
+                                // Запись UserId и Токена в FRD
+                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                                Query query = rootRef.child("Tokens").equalTo(user.getId());
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (!snapshot.exists()) {
+                                            DatabaseReference reference = FirebaseDatabase.getInstance()
+                                                    .getReference("Tokens").child(user.getId());
+
+                                            FirebaseMessaging.getInstance().getToken()
+                                                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<String> task) {
+                                                            String token = task.getResult();
+
+                                                            HashMap<String, String> hashMap = new HashMap<>();
+                                                            hashMap.put("token", token);
+
+                                                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    //Toast.makeText(context, "token: " + token, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                                String loginEncrypted = Crypto.base64Encode(finalLogin);
+                                String passwordEncrypted = Crypto.base64Encode(finalPass);
+                                sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("login", loginEncrypted);
+                                editor.putString("pass", passwordEncrypted);
+                                editor.apply();
+                            }
+
+                            if(user.getDocs() != null) {
+                                List<UserDoc> userDocList = new ArrayList<>();
+                                List<UserDocHistory> userDocHistories = new ArrayList<>();
+                                for (Map<String, UserDoc> item : user.getDocs()) {
+                                    Set<String> keys = item.keySet();
+                                    for (String s : keys) {
+                                        UserDoc userDoc = item.get(s);
+                                        userDocList.add(userDoc);
+                                    }
+                                }
+
+                                for (Map<String, UserDocHistory> item : user.getDocsHistory()) {
+                                    Set<String> keys = item.keySet();
+                                    for (String s : keys) {
+                                        UserDocHistory userDocHistory = item.get(s);
+                                        userDocHistories.add(userDocHistory);
+                                    }
+                                }
+                                // Распределяем подписанные и неподписанные документы
+                                List<UserDocFragment> subscribedDocs = new ArrayList<>();
+                                List<UserDocFragment> unsubscribedDocs = new ArrayList<>();
+                                for (UserDoc userDoc : userDocList) {
+                                    String latest = "1900-01-01 09:00:00";
+                                    String status = "";
+                                    Integer docId = -1;
+                                    String title = "";
+                                    String dateEnd = "";
+                                    String file = "", subLink = "", unsubLink = "";
+                                    for (UserDocHistory userDocHistory : userDocHistories) {
+                                        if (userDocHistory.getId() == userDoc.getId()) {
+                                            if (DateTimeDifference.startLaterThanEnd(userDocHistory.getDate(), latest, "login")) {
+                                                latest = userDocHistory.getDate();
+                                                status = userDocHistory.getTitle();
+                                                docId = userDocHistory.getId();
+                                                title = userDoc.getTitle();
+                                                dateEnd = userDoc.getEndDate();
+                                                file = userDoc.getFile();
+                                                subLink = userDoc.getSubLink();
+                                                unsubLink = userDoc.getUnsubLink();
+                                            }
+                                        }
+                                    }
+
+                                    UserDocFragment userDocFragment;
+                                    if (status.equals("Подписание документа") && docId != -1) {
+                                        userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
+                                        subscribedDocs.add(userDocFragment);
+                                    } else if (docId != -1) {
+                                        userDocFragment = getUserDocFragment(docId, title, dateEnd, status, latest, file, subLink, unsubLink);
+                                        unsubscribedDocs.add(userDocFragment);
+                                    }
+                                }
+
+
+                                if (mode.equals("login")) {
+                                    fragmentManager.beginTransaction().replace(R.id.fragment_container, new UserAccountFragment(subscribedDocs, unsubscribedDocs)).commit();
+                                } else if (mode.equals("cache")) {
+                                    String fullName = user.getSurname() + " " + user.getName() + " " + user.getPatronymic();
+                                    SubUnsubCombine subUnsubCombine = new SubUnsubCombine(fullName, subscribedDocs, unsubscribedDocs);
+                                    customCallback.onSuccess(subUnsubCombine, "data");
+                                }
+
+                            }
+                            else{
+                                if (mode.equals("login")) {
+                                    fragmentManager.beginTransaction().replace(R.id.fragment_container, new UserAccountFragment(null, null)).commit();
+                                } else if (mode.equals("cache")) {
+                                    String fullName = user.getSurname() + " " + user.getName() + " " + user.getPatronymic();
+                                    SubUnsubCombine subUnsubCombine = new SubUnsubCombine(fullName, null, null);
+                                    customCallback.onSuccess(subUnsubCombine, "empty");
+                                }
+                            }
+
+                            String fullName = user.getSurname() + " " + user.getName().substring(0, 1) + ". " + user.getPatronymic().substring(0, 1) + ".";
+                            navigationView.getMenu().clear();
+                            navigationView.inflateMenu(R.menu.menu_account);
+                            navigationView.getMenu().findItem(R.id.nav_employee).setTitle(fullName);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserAccount> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 

@@ -18,11 +18,11 @@
             android:id="@+id/nav_contacts"
             android:title="Контакты"
             android:icon="@drawable/ic_parent"/>
-        <item
-            android:id="@+id/nav_dark_mode"
-            android:title="Темная тема"
-            android:icon="@drawable/ic_dark_mode"
-            android:actionLayout="@layout/theme_switch" />
+<!--        <item-->
+<!--            android:id="@+id/nav_dark_mode"-->
+<!--            android:title="Темная тема"-->
+<!--            android:icon="@drawable/ic_dark_mode"-->
+<!--            android:actionLayout="@layout/theme_switch" />-->
 
     <item android:id="@+id/nav_account"
         android:title="Личный кабинет">

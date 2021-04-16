@@ -37,11 +37,11 @@ public class UnsubscribeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_unsubscribe, container, false);
         rv = view.findViewById(R.id.rvUnsubDocs);
-        UserDocFragment newUserDoc = new UserDocFragment();
-        newUserDoc.setTitle("Новый приказ на подпись");
-        newUserDoc.setDateEnd("15-03-2021");
-        newUserDoc.setStatus("Открытие докумета");
-        unsubDocs.add(newUserDoc);
+//        UserDocFragment newUserDoc = new UserDocFragment();
+//        newUserDoc.setTitle("Новый приказ на подпись");
+//        newUserDoc.setDateEnd("15-03-2021");
+//        newUserDoc.setStatus("Открытие докумета");
+//        unsubDocs.add(newUserDoc);
         adapter = new UserDocAdapter(getContext(), unsubDocs);
         rv.setAdapter(adapter);
         return view;
