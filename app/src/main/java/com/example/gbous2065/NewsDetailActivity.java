@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.gbous2065.Models.News;
+import com.example.gbous2065.Utils.PicassoImageGetter;
 
 public class NewsDetailActivity extends AppCompatActivity {
 
@@ -43,9 +45,19 @@ public class NewsDetailActivity extends AppCompatActivity {
     private void getIncomingIntent(){
         if(getIntent().hasExtra("projectsNews")){
             News news = getIntent().getParcelableExtra("projectsNews");
+            PicassoImageGetter imageGetter = new PicassoImageGetter(tvContentDetail, this);
+            Spannable htmlContent, htmlTitle;
 
-            tvTitleDetail.setText( Html.fromHtml(news.getName()));
-            tvContentDetail.setText(Html.fromHtml(news.getContent()));
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                htmlContent = (Spannable) Html.fromHtml(news.getContent(), Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
+                htmlTitle = (Spannable) Html.fromHtml(news.getName(), Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
+            } else {
+                htmlContent = (Spannable) Html.fromHtml(news.getContent(), imageGetter, null);
+                htmlTitle = (Spannable) Html.fromHtml(news.getName(), imageGetter, null);
+            }
+
+            tvTitleDetail.setText(htmlTitle);
+            tvContentDetail.setText(htmlContent);
             String[] dateMas =  news.getPublished_date().replace(".", "T").split("T");
             String[] time = dateMas[1].split(":");
             String hours = time[0];
