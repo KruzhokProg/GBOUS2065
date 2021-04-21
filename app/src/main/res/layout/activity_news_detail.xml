@@ -53,6 +53,7 @@
         android:scrollbars="vertical"
         android:text="@string/mylorem"
         android:textSize="18sp"
+        android:autoLink="all"
         android:textColor="?attr/anounceRvItemColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

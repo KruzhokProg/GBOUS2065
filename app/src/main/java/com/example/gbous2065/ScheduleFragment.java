@@ -117,12 +117,14 @@ public class ScheduleFragment extends Fragment {
                 public void onResponse(Call<AllFiles> call, Response<AllFiles> response) {
                     AllFiles data = response.body();
                     List<com.example.gbous2065.Models.File> files = data.getItems();
+                    List<String> scheduleFiles = new ArrayList<>();
 
                     String url = "";
                     for (com.example.gbous2065.Models.File file : files) {
                         String dir = file.getPath().split("/")[1];
                         if (dir.equals("Расписание")) {
                             url = file.getFile_url();
+                            //scheduleFiles.add(url);
                             break;
                         }
                     }
@@ -139,7 +141,6 @@ public class ScheduleFragment extends Fragment {
                         public void onSuccess(int statusCode, Header[] headers, File file) {
                             if (file != null) {
                                 try {
-
                                     schedules = new ArrayList<>();
                                     Boolean isSchedulePassed, isMonday, isTuesday, isWednesday, isThursday, isFriday;
                                     Boolean isLessonNum; // начало строки с уроками
@@ -353,9 +354,9 @@ public class ScheduleFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
+                            ShowSchedule();
                         }
                     });
-
                 }
 
                 @Override
@@ -364,15 +365,10 @@ public class ScheduleFragment extends Fragment {
             });
 
 
-            Handler h = new Handler();
-            h.postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            ShowSchedule();
-                        }
-                    }, 2500
-            );
+//            Handler h = new Handler();
+//            h.postDelayed(
+//                    () -> ShowSchedule(), 2500
+//            );
 
 
         }
