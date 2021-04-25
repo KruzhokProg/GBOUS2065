@@ -139,15 +139,15 @@
 
     <ProgressBar
         android:id="@+id/progress_bar_schedule"
-        style = "?android:attr/progressBarStyle"
+        style="?android:attr/progressBarStyle"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="30dp"
+        android:indeterminateTint="?attr/pbColor"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnShowSchedule"
-        android:indeterminateTint="?attr/pbColor"
-        />
+        app:layout_constraintTop_toBottomOf="@id/btnShowSchedule" />
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/rvSchedule"-->
 <!--        android:layout_width="match_parent"-->

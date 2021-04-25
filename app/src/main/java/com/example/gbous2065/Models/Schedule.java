@@ -24,6 +24,7 @@ public class Schedule {
         return grade;
     }
 
+
     public void setGrade(String grade) {
         this.grade = grade;
     }

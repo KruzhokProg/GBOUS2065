@@ -3,6 +3,7 @@ package com.example.gbous2065.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.renderscript.Script;
+import android.util.Log;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -12,14 +13,22 @@ import androidx.fragment.app.FragmentManager;
 import com.example.gbous2065.AdminAccountFragment;
 import com.example.gbous2065.Models.AdminAccount;
 import com.example.gbous2065.Models.AdminDocHistory;
+import com.example.gbous2065.Models.AllFiles;
 import com.example.gbous2065.Models.CustomCallback;
+import com.example.gbous2065.Models.LessonInfo;
+import com.example.gbous2065.Models.Schedule;
+import com.example.gbous2065.Models.ScheduleByBuilding;
+import com.example.gbous2065.Models.ScheduleCallBack;
+import com.example.gbous2065.Models.ScheduleFileInfo;
 import com.example.gbous2065.Models.SubUnsubCombine;
 import com.example.gbous2065.Models.UserAccount;
 import com.example.gbous2065.Models.UserDoc;
 import com.example.gbous2065.Models.UserDocFragment;
 import com.example.gbous2065.Models.UserDocHistory;
+import com.example.gbous2065.Models.Weekdays;
 import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiUserAccountClient;
+import com.example.gbous2065.Network.ApiYandexClient;
 import com.example.gbous2065.R;
 import com.example.gbous2065.UserAccountFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,19 +41,300 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
+import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.gbous2065.Network.ApiYandexClient.ACCESS_TOKEN;
+
 public class NetworkDownload {
+
+
+    public static void getScheduleAndGo(Context context, String building, String grade, String letter, String weekday, ScheduleCallBack scheduleCallBack){
+
+        ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
+
+        Call<AllFiles> call = apiService.getAllFiles("OAuth " + ACCESS_TOKEN, 1000);
+        call.enqueue(new Callback<AllFiles>() {
+            @Override
+            public void onResponse(Call<AllFiles> call, Response<AllFiles> response) {
+                AllFiles data = response.body();
+                List<com.example.gbous2065.Models.File> files = data.getItems();
+                List<ScheduleFileInfo> scheduleFiles = new ArrayList<>();
+                AsyncHttpClient asyncHttpClient;
+
+                String url = "";
+                for (com.example.gbous2065.Models.File file : files) {
+                    String dir = file.getPath().split("/")[1];
+                    if (dir.equals("ТестРасписание")) {
+                        url = file.getFile_url();
+                        String file_name = file.getName();
+                        String building = file_name.split(" ")[file_name.split(" ").length-1];
+                        building = building.substring(0,building.indexOf("."));
+                        if(building.contains("ш")) {
+                            ScheduleFileInfo scheduleFileInfo = new ScheduleFileInfo(building, url);
+                            scheduleFiles.add(scheduleFileInfo);
+                        }
+                    }
+                }
+
+                List<ScheduleByBuilding> scheduleByBuildingList = new ArrayList<>();
+                for (ScheduleFileInfo info: scheduleFiles) {
+
+                    if(info.getBuilding() != building)
+                        continue;
+
+                    String file_url = info.getUrl();
+                    asyncHttpClient = new AsyncHttpClient();
+                    asyncHttpClient.get(file_url, new FileAsyncHttpResponseHandler(context) {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                            Toast.makeText(context, "Error in Downloading Excel File", Toast.LENGTH_SHORT).show();
+                            Log.d("MainActivity", throwable.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, File file) {
+                            List<Schedule> schedules = new ArrayList<>();
+                            if (file != null) {
+                                try {
+                                    Boolean isSchedulePassed, isMonday, isTuesday, isWednesday, isThursday, isFriday;
+                                    Boolean isLessonNum; // начало строки с уроками
+                                    Integer colNum; // количество классов в параллели
+                                    Integer curNum; // текущий класс в параллели
+                                    Integer c1 = 0, c2 = 0;
+                                    String[] lessonRoom;
+                                    String lesson = "", room = "";
+
+                                    FileInputStream fis = new FileInputStream(file);
+                                    XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
+                                    Integer numOfSheets = myWorkBook.getNumberOfSheets();
+                                    for (int sheetNum = 0; sheetNum < numOfSheets; sheetNum++) {
+
+                                        isSchedulePassed = false;
+                                        isMonday = false;
+                                        isTuesday = false;
+                                        isWednesday = false;
+                                        isThursday = false;
+                                        isFriday = false;
+
+                                        XSSFSheet mySheet = myWorkBook.getSheetAt(sheetNum);
+                                        Iterator<Row> rowIterator = mySheet.iterator();
+                                        String content;
+                                        colNum = 0; // количество классов в параллели
+
+                                        Integer emptyLessonNum = 0; // количество пропусков в уроках
+                                        while (rowIterator.hasNext()) {
+
+                                            isLessonNum = false;
+                                            curNum = c1;
+                                            emptyLessonNum = 0;
+                                            if (colNum != 0) {
+                                                isSchedulePassed = false;
+                                            }
+
+                                            Row row = rowIterator.next();
+                                            Iterator<Cell> cellIterator = row.cellIterator();
+                                            while (cellIterator.hasNext()) {
+                                                Cell cell = cellIterator.next();
+                                                switch (cell.getCellType()) {
+                                                    case Cell.CELL_TYPE_STRING:
+                                                        content = cell.getStringCellValue();
+                                                        content = content.trim().replace("-", "");
+                                                        lessonRoom = content.split(" ");
+                                                        lessonRoom = Arrays.stream(lessonRoom).filter(x -> !x.isEmpty()).toArray(String[]::new);
+
+                                                        if (lessonRoom.length == 0) {
+                                                            lesson = "----------------------";
+                                                            room = "";
+                                                        } else if (content.contains("физическая культура")) {
+                                                            lesson = "физическая культура";
+                                                            room = "спортзал";
+                                                        } else if (lessonRoom.length > 1) {
+//                                                lesson = lessonRoom[0];
+//                                                room = lessonRoom[1];
+                                                            lesson = "";
+                                                            room = "";
+                                                            for (int i = 0; i < lessonRoom.length - 1; i++) {
+                                                                lesson += lessonRoom[i] + " ";
+                                                            }
+                                                            room = lessonRoom[lessonRoom.length - 1];
+                                                        }
+
+                                                        if (content.contains("Расписание")) {
+                                                            isSchedulePassed = true;
+                                                        } else if (isSchedulePassed == true) {
+                                                            // строка с перечнем классов в параллели
+                                                            colNum++;
+                                                            Schedule schedule = new Schedule();
+                                                            String[] gradeLetter = content.split("");
+                                                            String grade, letter;
+                                                            if (gradeLetter.length == 2) {
+                                                                grade = gradeLetter[0];
+                                                                letter = gradeLetter[1];
+                                                            } else {
+                                                                grade = gradeLetter[0] + gradeLetter[1];
+                                                                letter = gradeLetter[2];
+                                                            }
+                                                            schedule.setGrade(grade);
+                                                            schedule.setLetter(letter);
+                                                            schedules.add(schedule);
+                                                        } else {
+                                                            if (content.equals("Пятница") && isFriday == false) {
+                                                                isFriday = false;
+                                                                for (int i = c1; i < c2; i++) {
+                                                                    Weekdays fridayLessons = new Weekdays();
+                                                                    fridayLessons.setWeekday("Пятница");
+                                                                    schedules.get(i).getWeekdays().add(fridayLessons);
+                                                                }
+                                                                isFriday = true;
+                                                            } else if (isFriday == true) {
+                                                                LessonInfo lessonInfo = new LessonInfo(lesson, room);
+                                                                schedules.get(curNum).getWeekdays().get(4).getLessons().add(lessonInfo);
+                                                                curNum++;
+                                                            } else if (content.equals("Четверг") && isThursday == false) {
+                                                                isThursday = false;
+                                                                for (int i = c1; i < c2; i++) {
+                                                                    Weekdays thursdayLessons = new Weekdays();
+                                                                    thursdayLessons.setWeekday("Четверг");
+                                                                    schedules.get(i).getWeekdays().add(thursdayLessons);
+                                                                }
+                                                                isThursday = true;
+                                                            } else if (isThursday == true) {
+                                                                LessonInfo lessonInfo = new LessonInfo(lesson, room);
+                                                                schedules.get(curNum).getWeekdays().get(3).getLessons().add(lessonInfo);
+                                                                curNum++;
+                                                            } else if (content.equals("Среда") && isWednesday == false) {
+                                                                isWednesday = false;
+                                                                for (int i = c1; i < c2; i++) {
+                                                                    Weekdays wednsdayLessons = new Weekdays();
+                                                                    wednsdayLessons.setWeekday("Среда");
+                                                                    schedules.get(i).getWeekdays().add(wednsdayLessons);
+                                                                }
+                                                                isWednesday = true;
+                                                            } else if (isWednesday == true) {
+                                                                LessonInfo lessonInfo = new LessonInfo(lesson, room);
+                                                                schedules.get(curNum).getWeekdays().get(2).getLessons().add(lessonInfo);
+                                                                curNum++;
+                                                            } else if (content.equals("Вторник") && isTuesday == false) {
+                                                                isTuesday = false;
+                                                                for (int i = c1; i < c2; i++) {
+                                                                    Weekdays tuesdayLessons = new Weekdays();
+                                                                    tuesdayLessons.setWeekday("Вторник");
+                                                                    schedules.get(i).getWeekdays().add(tuesdayLessons);
+                                                                }
+                                                                isTuesday = true;
+                                                            } else if (isTuesday == true) {
+                                                                LessonInfo lessonInfo = new LessonInfo(lesson, room);
+                                                                schedules.get(curNum).getWeekdays().get(1).getLessons().add(lessonInfo);
+                                                                curNum++;
+                                                            } else if (content.equals("Понедельник") && isMonday == false) {
+                                                                c2 = c1 + colNum;
+                                                                for (int i = c1; i < c2; i++) {
+                                                                    Weekdays mondayLessons = new Weekdays();
+                                                                    mondayLessons.setWeekday("Понедельник");
+                                                                    schedules.get(i).getWeekdays().add(mondayLessons);
+                                                                }
+                                                                isMonday = true;
+
+                                                            } else if (isMonday == true) {
+                                                                LessonInfo lessonInfo = new LessonInfo(lesson, room);
+                                                                schedules.get(curNum).getWeekdays().get(0).getLessons().add(lessonInfo);
+                                                                curNum++;
+                                                            }
+
+
+                                                        }
+
+                                                        break;
+                                                    case Cell.CELL_TYPE_NUMERIC:
+                                                        content = String.valueOf(cell.getNumericCellValue());
+                                                        isLessonNum = true;
+                                                        break;
+                                                    case Cell.CELL_TYPE_BLANK:
+                                                        if (isLessonNum == true) {
+                                                            //emptyLessonNum++;
+                                                            //curNum = emptyLessonNum;
+                                                            curNum++;
+                                                        }
+                                                }
+                                            }
+                                        }
+
+                                        c1 += colNum;
+                                    }
+
+
+                                    List<String> grades = new ArrayList<>();
+
+                                    List<String> letters = new ArrayList<>();
+                                    for (Schedule schedule : schedules) {
+                                        letters.add(schedule.getLetter());
+                                        grades.add(schedule.getGrade());
+                                    }
+                                    // удаляем дубликаты
+                                    HashSet<String> hashSet = new HashSet<String>();
+                                    hashSet.addAll(letters);
+                                    letters.clear();
+                                    letters.addAll(hashSet);
+
+                                    hashSet.clear();
+                                    hashSet.addAll(grades);
+                                    grades.clear();
+                                    grades.addAll(hashSet);
+
+                                    //подгрузка букв первого класса
+                                    List<String> shownLetters = new ArrayList<>();
+                                    for (Schedule schedule : schedules) {
+                                        if (schedule.getGrade().equals(grades.get(0))) {
+                                            shownLetters.add(schedule.getLetter());
+                                        }
+                                    }
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            ScheduleByBuilding scheduleByBuilding = new ScheduleByBuilding(info.getBuilding(), schedules);
+//                            scheduleByBuildingList.add(scheduleByBuilding);
+//                                ShowSchedule();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AllFiles> call, Throwable t) {
+            }
+        });
+
+    }
 
     public static void getDataAndGo(Context context, FragmentManager fragmentManager, NavigationView navigationView, String mode,
                                     CustomCallback customCallback, String... userInfo){
