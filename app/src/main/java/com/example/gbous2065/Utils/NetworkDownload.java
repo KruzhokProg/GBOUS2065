@@ -73,7 +73,7 @@ import static com.example.gbous2065.Network.ApiYandexClient.ACCESS_TOKEN;
 public class NetworkDownload {
 
 
-    public static void getScheduleAndGo(Context context, String building, String grade, String letter, String weekday, ScheduleCallBack scheduleCallBack){
+    public static void getScheduleAndGo(Context context, ScheduleCallBack scheduleCallBack){
 
         ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
 
@@ -102,11 +102,12 @@ public class NetworkDownload {
                 }
 
                 List<ScheduleByBuilding> scheduleByBuildingList = new ArrayList<>();
+                List<String> buildings = new ArrayList<>();
+
+                final int[] filesCount = {0};
                 for (ScheduleFileInfo info: scheduleFiles) {
 
-                    if(info.getBuilding() != building)
-                        continue;
-
+                    buildings.add(info.getBuilding());
                     String file_url = info.getUrl();
                     asyncHttpClient = new AsyncHttpClient();
                     asyncHttpClient.get(file_url, new FileAsyncHttpResponseHandler(context) {
@@ -118,7 +119,11 @@ public class NetworkDownload {
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, File file) {
+
                             List<Schedule> schedules = new ArrayList<>();
+                            List<String> grades = new ArrayList<>();
+                            List<String> letters = new ArrayList<>();
+
                             if (file != null) {
                                 try {
                                     Boolean isSchedulePassed, isMonday, isTuesday, isWednesday, isThursday, isFriday;
@@ -195,7 +200,12 @@ public class NetworkDownload {
                                                             if (gradeLetter.length == 2) {
                                                                 grade = gradeLetter[0];
                                                                 letter = gradeLetter[1];
-                                                            } else {
+                                                            }
+                                                            else if( gradeLetter.length == 4){
+                                                                grade = gradeLetter[0] + gradeLetter[1] + gradeLetter[2];
+                                                                letter = gradeLetter[3];
+                                                            }
+                                                            else {
                                                                 grade = gradeLetter[0] + gradeLetter[1];
                                                                 letter = gradeLetter[2];
                                                             }
@@ -287,10 +297,6 @@ public class NetworkDownload {
                                         c1 += colNum;
                                     }
 
-
-                                    List<String> grades = new ArrayList<>();
-
-                                    List<String> letters = new ArrayList<>();
                                     for (Schedule schedule : schedules) {
                                         letters.add(schedule.getLetter());
                                         grades.add(schedule.getGrade());
@@ -307,12 +313,12 @@ public class NetworkDownload {
                                     grades.addAll(hashSet);
 
                                     //подгрузка букв первого класса
-                                    List<String> shownLetters = new ArrayList<>();
-                                    for (Schedule schedule : schedules) {
-                                        if (schedule.getGrade().equals(grades.get(0))) {
-                                            shownLetters.add(schedule.getLetter());
-                                        }
-                                    }
+//                                    List<String> shownLetters = new ArrayList<>();
+//                                    for (Schedule schedule : schedules) {
+//                                        if (schedule.getGrade().equals(grades.get(0))) {
+//                                            shownLetters.add(schedule.getLetter());
+//                                        }
+//                                    }
 
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
@@ -321,7 +327,11 @@ public class NetworkDownload {
                                 }
                             }
                             ScheduleByBuilding scheduleByBuilding = new ScheduleByBuilding(info.getBuilding(), schedules);
-//                            scheduleByBuildingList.add(scheduleByBuilding);
+                            scheduleByBuildingList.add(scheduleByBuilding);
+                            filesCount[0]++;
+                            if(filesCount[0] == scheduleFiles.size()){
+                                scheduleCallBack.onSuccess(scheduleByBuildingList);
+                            }
 //                                ShowSchedule();
                         }
                     });

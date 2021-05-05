@@ -20,6 +20,29 @@
         app:textTint="?attr/titleRvItemColor"
         app:arrowTint="?attr/titleRvItemColor" />
 
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/textInputCorpuses"-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="30dp"-->
+<!--        android:layout_marginEnd="30dp"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        app:boxBackgroundColor="#e2d4ea"-->
+<!--        app:errorEnabled="true"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
+
+<!--        <AutoCompleteTextView-->
+<!--            android:id="@+id/actvCorpuses"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Корпус"-->
+<!--            android:inputType="none" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spGrade"
         android:layout_width="100dp"

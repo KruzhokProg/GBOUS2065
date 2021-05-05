@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiYandexClient {
     private static final String BASE_URL = "https://cloud-api.yandex.net";
-    public static final String ACCESS_TOKEN = "AgAEA7qixWtmAAa-I0Etuxl6wEwBs0mLa2vI0vk";
+    public static final String ACCESS_TOKEN = "AQAEA7qjvMhBAAcXnvnpRWI93E6ur3fUbjXHKtQ";
 
     private static Retrofit retrofit = null;
 
