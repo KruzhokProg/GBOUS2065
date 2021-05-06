@@ -7,151 +7,118 @@
     tools:context=".ScheduleFragment"
     android:background="?attr/rvBackground">
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spCorpus"
-        android:layout_width="100dp"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputBuildings"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        app:layout_constraintEnd_toStartOf="@+id/spGrade"
+        android:layout_marginTop="30dp"
+        app:boxBackgroundColor="#fff"
+        app:boxStrokeColor="?attr/floatingButtonColor"
+        app:hintTextColor="?attr/floatingButtonColor"
+        app:endIconTint="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/textInputGrades"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="?attr/spinnerBackColor"
-        app:textTint="?attr/titleRvItemColor"
-        app:arrowTint="?attr/titleRvItemColor" />
+        app:layout_constraintTop_toTopOf="parent">
 
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/textInputCorpuses"-->
-<!--        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="30dp"-->
-<!--        android:layout_marginEnd="30dp"-->
-<!--        android:layout_marginBottom="20dp"-->
-<!--        app:boxBackgroundColor="#e2d4ea"-->
-<!--        app:errorEnabled="true"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.5"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
+        <AutoCompleteTextView
+            android:id="@+id/actvBuildings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Корпус"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-<!--        <AutoCompleteTextView-->
-<!--            android:id="@+id/actvCorpuses"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="Корпус"-->
-<!--            android:inputType="none" />-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
-
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spGrade"
-        android:layout_width="100dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputGrades"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        app:layout_constraintEnd_toStartOf="@+id/spLetter"
+        app:boxBackgroundColor="#fff"
+        app:boxStrokeColor="?attr/floatingButtonColor"
+        app:hintTextColor="?attr/floatingButtonColor"
+        app:endIconTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputBuildings"
+        app:layout_constraintEnd_toStartOf="@+id/textInputLetters"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/spCorpus"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="?attr/spinnerBackColor"
-        android:textColor="?attr/titleRvItemColor"
-        app:textTint="?attr/titleRvItemColor"
-        app:arrowTint="?attr/titleRvItemColor"/>
+        app:layout_constraintStart_toEndOf="@+id/textInputBuildings"
+        app:layout_constraintTop_toTopOf="@+id/textInputBuildings">
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spLetter"
-        android:layout_width="100dp"
+        <AutoCompleteTextView
+            android:id="@+id/actvGrades"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Класс"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLetters"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        app:boxBackgroundColor="#fff"
+        app:boxStrokeColor="?attr/floatingButtonColor"
+        app:hintTextColor="?attr/floatingButtonColor"
+        app:endIconTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputGrades"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/spGrade"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="?attr/spinnerBackColor"
-        android:textColor="?attr/spinnerTextColor"
-        app:textTint="?attr/titleRvItemColor"
-        app:arrowTint="?attr/titleRvItemColor"/>
+        app:layout_constraintStart_toEndOf="@+id/textInputGrades"
+        app:layout_constraintTop_toTopOf="@+id/textInputGrades">
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spWeekday"
+        <AutoCompleteTextView
+            android:id="@+id/actvLetters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Буква"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputWeekdays"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/spLetter"
-        app:layout_constraintStart_toStartOf="@+id/spCorpus"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:backgroundTint="?attr/spinnerBackColor"
-        android:textColor="?attr/spinnerTextColor"
-        app:textTint="?attr/titleRvItemColor"
-        app:arrowTint="?attr/titleRvItemColor"/>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Корпус"
-        android:textColor="?attr/spinnerTextColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/spCorpus"
-        app:layout_constraintEnd_toEndOf="@+id/spCorpus"
-        app:layout_constraintStart_toStartOf="@+id/spCorpus" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Класс"
-        android:textSize="18sp"
-        android:textColor="?attr/spinnerTextColor"
-        app:layout_constraintBottom_toTopOf="@+id/spGrade"
-        app:layout_constraintEnd_toEndOf="@+id/spGrade"
-        app:layout_constraintStart_toStartOf="@+id/spGrade" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Буква"
-        android:textSize="18sp"
-        android:textColor="?attr/titleRvItemColor"
-        app:layout_constraintBottom_toTopOf="@+id/spLetter"
-        app:layout_constraintEnd_toEndOf="@+id/spLetter"
-        app:layout_constraintStart_toStartOf="@+id/spLetter" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="День недели"
-        android:textSize="18sp"
-        android:textColor="?attr/titleRvItemColor"
-        app:layout_constraintEnd_toEndOf="@+id/spLetter"
-        app:layout_constraintStart_toStartOf="@+id/spCorpus"
-        app:layout_constraintTop_toBottomOf="@+id/spGrade" />
+        app:boxBackgroundColor="#fff"
+        app:boxStrokeColor="?attr/floatingButtonColor"
+        app:hintTextColor="?attr/floatingButtonColor"
+        app:endIconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLetters"
+        app:layout_constraintStart_toStartOf="@+id/textInputBuildings"
+        app:layout_constraintTop_toBottomOf="@+id/textInputBuildings">
+
+        <AutoCompleteTextView
+            android:id="@+id/actvWeekdays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="День недели"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnShowSchedule"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="?attr/floatingButtonColor"
         android:text="Показать расписание"
         android:textColor="?attr/buttonShowSchedule"
-        android:backgroundTint="?attr/floatingButtonColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spWeekday" />
-
+        app:layout_constraintTop_toBottomOf="@+id/switchRemember" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSchedule"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="?attr/cardBackgroundRvItem"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -167,24 +134,164 @@
         android:layout_height="70dp"
         android:layout_marginTop="30dp"
         android:indeterminateTint="?attr/pbColor"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnShowSchedule" />
+
+    <Switch
+        android:id="@+id/switchRemember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Запомнить"
+        android:trackTint="#AAA"
+        android:thumbTint="?attr/floatingButtonColor"
+        app:layout_constraintStart_toStartOf="@+id/textInputWeekdays"
+        app:layout_constraintTop_toBottomOf="@+id/textInputWeekdays" />
+
+    <!--    <org.angmarch.views.NiceSpinner-->
+<!--        android:id="@+id/spCorpus"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="70dp"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/spGrade"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:backgroundTint="?attr/spinnerBackColor"-->
+<!--        app:textTint="?attr/titleRvItemColor"-->
+<!--        app:arrowTint="?attr/titleRvItemColor" />-->
+
+
+<!--    <org.angmarch.views.NiceSpinner-->
+<!--        android:id="@+id/spGrade"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="70dp"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/spLetter"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/spCorpus"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:backgroundTint="?attr/spinnerBackColor"-->
+<!--        android:textColor="?attr/titleRvItemColor"-->
+<!--        app:textTint="?attr/titleRvItemColor"-->
+<!--        app:arrowTint="?attr/titleRvItemColor"/>-->
+
+<!--    <org.angmarch.views.NiceSpinner-->
+<!--        android:id="@+id/spLetter"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="70dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/spGrade"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:backgroundTint="?attr/spinnerBackColor"-->
+<!--        android:textColor="?attr/spinnerTextColor"-->
+<!--        app:textTint="?attr/titleRvItemColor"-->
+<!--        app:arrowTint="?attr/titleRvItemColor"/>-->
+
+<!--    <org.angmarch.views.NiceSpinner-->
+<!--        android:id="@+id/spWeekday"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/spLetter"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/spCorpus"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView4"-->
+<!--        android:backgroundTint="?attr/spinnerBackColor"-->
+<!--        android:textColor="?attr/spinnerTextColor"-->
+<!--        app:textTint="?attr/titleRvItemColor"-->
+<!--        app:arrowTint="?attr/titleRvItemColor"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:text="Корпус"-->
+<!--        android:textColor="?attr/spinnerTextColor"-->
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/spCorpus"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/spCorpus"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/spCorpus" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:text="Класс"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="?attr/spinnerTextColor"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/spGrade"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/spGrade"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/spGrade" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:text="Буква"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="?attr/titleRvItemColor"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/spLetter"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/spLetter"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/spLetter" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView4"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="День недели"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="?attr/titleRvItemColor"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/spLetter"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/spCorpus"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/spGrade" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnShowSchedule"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginTop="40dp"-->
+<!--        android:text="Показать расписание"-->
+<!--        android:textColor="?attr/buttonShowSchedule"-->
+<!--        android:backgroundTint="?attr/floatingButtonColor"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/spWeekday" />-->
+
+
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/rvSchedule"-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="400dp"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginTop="320dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:background="?attr/cardBackgroundRvItem"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
 <!--        app:layout_constraintBottom_toBottomOf="parent"-->
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/btnShowSchedule"-->
-<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
 <!--        tools:listitem="@layout/rv_schedule_item" />-->
 
-<!--    android:layout_marginStart="5dp"-->
-<!--    android:layout_marginTop="22dp"-->
-<!--    android:layout_marginEnd="5dp"-->
-<!--    android:layout_marginBottom="5dp"-->
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progress_bar_schedule"-->
+<!--        style="?android:attr/progressBarStyle"-->
+<!--        android:layout_width="70dp"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:indeterminateTint="?attr/pbColor"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/btnShowSchedule" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

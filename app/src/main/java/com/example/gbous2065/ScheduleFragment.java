@@ -2,14 +2,20 @@ package com.example.gbous2065;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +42,7 @@ import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.util.StringUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -50,6 +57,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
@@ -62,7 +70,8 @@ import static com.yandex.runtime.Runtime.getApplicationContext;
 public class ScheduleFragment extends Fragment {
 
     AsyncHttpClient asyncHttpClient;
-    NiceSpinner spCorpus, spGrade, spLetter, spWeekday;
+//    NiceSpinner spCorpus, spGrade, spLetter, spWeekday;
+    AutoCompleteTextView spCorpus, spGrade, spLetter, spWeekday;
     RecyclerView rvSchedule;
     Button btnShowSchedule;
     List<Schedule> schedules;
@@ -71,6 +80,8 @@ public class ScheduleFragment extends Fragment {
     List<LessonInfo> out;
     ProgressBar pb;
     DataBaseHelper db;
+    Switch switchRemember;
+    SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -78,10 +89,15 @@ public class ScheduleFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_schedule_fragment, container, false);
 
         pb = view.findViewById(R.id.progress_bar_schedule);
-        spCorpus = view.findViewById(R.id.spCorpus);
-        spGrade = view.findViewById(R.id.spGrade);
-        spLetter = view.findViewById(R.id.spLetter);
-        spWeekday = view.findViewById(R.id.spWeekday);
+        switchRemember = view.findViewById(R.id.switchRemember);
+//        spCorpus = view.findViewById(R.id.spCorpus);
+//        spGrade = view.findViewById(R.id.spGrade);
+//        spLetter = view.findViewById(R.id.spLetter);
+//        spWeekday = view.findViewById(R.id.spWeekday);
+        spCorpus = view.findViewById(R.id.actvBuildings);
+        spGrade = view.findViewById(R.id.actvGrades);
+        spLetter = view.findViewById(R.id.actvLetters);
+        spWeekday = view.findViewById(R.id.actvWeekdays);
         rvSchedule = view.findViewById(R.id.rvSchedule);
         btnShowSchedule = view.findViewById(R.id.btnShowSchedule);
         adapter = new ScheduleAdapter(getContext());
@@ -91,6 +107,84 @@ public class ScheduleFragment extends Fragment {
 
 
         db = new DataBaseHelper(getContext());
+        sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
+        if(!sharedPreferences.getString("building","").isEmpty()) {
+            switchRemember.setChecked(false);
+            switchRemember.setText("Забыть");
+        }
+        else {
+            switchRemember.setChecked(true);
+            switchRemember.setText("Запомнить");
+        }
+
+        switchRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+//                    switchRemember.setText("Запомнить");
+                    buttonView.setText("Запомнить");
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("building", "");
+                    editor.putString("grade", "");
+                    editor.putString("letter", "");
+                    editor.putString("weekday", "");
+                    editor.apply();
+
+                }else{
+                    buttonView.setText("Забыть");
+                    String building = spCorpus.getEditableText().toString();
+                    String grade = spGrade.getEditableText().toString();
+                    String letter = spLetter.getEditableText().toString();
+                    String weekday = spWeekday.getEditableText().toString();
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("building", building);
+                    editor.putString("grade", grade);
+                    editor.putString("letter", letter);
+                    editor.putString("weekday", weekday);
+                    editor.apply();
+                }
+            }
+        });
+
+//        switchRemember.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(switchRemember.isChecked()){
+//                    switchRemember.setText("Забыть");
+//
+//                    String building = spCorpus.getEditableText().toString();
+//                    String grade = spGrade.getEditableText().toString();
+//                    String letter = spLetter.getEditableText().toString();
+//                    String weekday = spWeekday.getEditableText().toString();
+//
+////                    if(building.isEmpty() || grade.isEmpty() || letter.isEmpty() || weekday.isEmpty()){
+////                        Toast.makeText(getContext(), "Выберите все пункты!", Toast.LENGTH_SHORT).show();
+////                    }
+////                    else{
+//                    sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("building", building);
+//                    editor.putString("grade", grade);
+//                    editor.putString("letter", letter);
+//                    editor.putString("weekday", weekday);
+//                    editor.apply();
+////                    }
+//                }
+//                else{
+//                    switchRemember.setText("Запомнить");
+//
+//                    sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("building", "");
+//                    editor.putString("grade", "");
+//                    editor.putString("letter", "");
+//                    editor.putString("weekday", "");
+//                    editor.apply();
+//                }
+//            }
+//        });
 //        if(db.isScheduleCached())
 //        {
 //            // выгрузка из бд
@@ -120,304 +214,50 @@ public class ScheduleFragment extends Fragment {
         NetworkDownload.getScheduleAndGo(getContext(), new ScheduleCallBack() {
             @Override
             public void onSuccess(List<ScheduleByBuilding> data) {
-//                scheduleByBuildingList = data;
+                scheduleByBuildingList = data;
                 List<String> buildings = new ArrayList<>();
                 for (ScheduleByBuilding item: data) {
                     buildings.add(item.getBuilding());
                 }
-                spCorpus.attachDataSource(buildings);
 
-                List<Schedule> firstSchedule = data.get(0).getScheduleList();
+                List<String> weekdays = new ArrayList<>();
+                weekdays.add("Понедельник");
+                weekdays.add("Вторник");
+                weekdays.add("Среда");
+                weekdays.add("Четверг");
+                weekdays.add("Пятница");
 
-                HashSet<String> uniqueGrades = new HashSet<>();
-                for (Schedule item: firstSchedule) {
-                    uniqueGrades.add(item.getGrade());
-                }
-                List<String> grades = new ArrayList<>(uniqueGrades);
-                spGrade.attachDataSource(grades);
-
-                HashSet<String> uniqueLetters = new HashSet<>();
-                for (Schedule item: firstSchedule) {
-                    if(item.getGrade().equals(grades.get(0))){
-                        uniqueLetters.add(item.getLetter());
+                spCorpus.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, buildings));
+                spCorpus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedBuilding = (String)parent.getItemAtPosition(position);
+                        ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,getGradesByBuilding(selectedBuilding, data));
+                        spGrade.setAdapter(adapter);
+                        //spGrade.setText((CharSequence) adapter.getItem(0), false);
+                        //spGrade.performClick();
                     }
-                }
-                List<String> letters = new ArrayList<>(uniqueLetters);
-                spLetter.attachDataSource(letters);
+                });
 
-                fillWeekdaysSpinner();
+                spGrade.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedGrade = (String)parent.getItemAtPosition(position);
+                        String selectedBuilding = spCorpus.getEditableText().toString();
+                        ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getLettersByGrade(selectedGrade, selectedBuilding, data));
+                        spLetter.setAdapter(adapter);
+                        spLetter.setText((CharSequence) adapter.getItem(0), false);
+                    }
+                });
+
+                spWeekday.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, weekdays));
+
+                if(!sharedPreferences.getString("building","").isEmpty()){
+                    ShowSchedule("remember");
+                }
 
             }
         });
-//            ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
-//
-//            Call<AllFiles> call = apiService.getAllFiles("OAuth " + ACCESS_TOKEN, 1000);
-//            call.enqueue(new Callback<AllFiles>() {
-//                @Override
-//                public void onResponse(Call<AllFiles> call, Response<AllFiles> response) {
-//                    AllFiles data = response.body();
-//                    List<com.example.gbous2065.Models.File> files = data.getItems();
-//                    List<ScheduleFileInfo> scheduleFiles = new ArrayList<>();
-//
-//                    String url = "";
-//                    for (com.example.gbous2065.Models.File file : files) {
-//                        String dir = file.getPath().split("/")[1];
-//                        if (dir.equals("ТестРасписание")) {
-//                            url = file.getFile_url();
-//                            String file_name = file.getName();
-//                            String building = file_name.split(" ")[file_name.split(" ").length-1];
-//                            building = building.substring(0,building.indexOf("."));
-//                            if(building.contains("ш")) {
-//                                ScheduleFileInfo scheduleFileInfo = new ScheduleFileInfo(building, url);
-//                                scheduleFiles.add(scheduleFileInfo);
-//                            }
-//                        }
-//                    }
-//
-//                    scheduleByBuildingList = new ArrayList<>();
-//                    for (ScheduleFileInfo info: scheduleFiles) {
-//
-//                        String file_url = info.getUrl();
-//                        asyncHttpClient = new AsyncHttpClient();
-//                        asyncHttpClient.get(file_url, new FileAsyncHttpResponseHandler(getContext()) {
-//                            @Override
-//                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-//                                Toast.makeText(getContext(), "Error in Downloading Excel File", Toast.LENGTH_SHORT).show();
-//                                Log.d("MainActivity", throwable.getMessage());
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(int statusCode, Header[] headers, File file) {
-//                                if (file != null) {
-//                                    try {
-//                                        schedules = new ArrayList<>();
-//                                        Boolean isSchedulePassed, isMonday, isTuesday, isWednesday, isThursday, isFriday;
-//                                        Boolean isLessonNum; // начало строки с уроками
-//                                        Integer colNum; // количество классов в параллели
-//                                        Integer curNum; // текущий класс в параллели
-//                                        Integer c1 = 0, c2 = 0;
-//                                        String[] lessonRoom;
-//                                        String lesson = "", room = "";
-//
-//                                        FileInputStream fis = new FileInputStream(file);
-//                                        XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
-//                                        Integer numOfSheets = myWorkBook.getNumberOfSheets();
-//                                        for (int sheetNum = 0; sheetNum < numOfSheets; sheetNum++) {
-//
-//                                            isSchedulePassed = false;
-//                                            isMonday = false;
-//                                            isTuesday = false;
-//                                            isWednesday = false;
-//                                            isThursday = false;
-//                                            isFriday = false;
-//
-//                                            XSSFSheet mySheet = myWorkBook.getSheetAt(sheetNum);
-//                                            Iterator<Row> rowIterator = mySheet.iterator();
-//                                            String content;
-//                                            colNum = 0; // количество классов в параллели
-//
-//                                            Integer emptyLessonNum = 0; // количество пропусков в уроках
-//                                            while (rowIterator.hasNext()) {
-//
-//                                                isLessonNum = false;
-//                                                curNum = c1;
-//                                                emptyLessonNum = 0;
-//                                                if (colNum != 0) {
-//                                                    isSchedulePassed = false;
-//                                                }
-//
-//                                                Row row = rowIterator.next();
-//                                                Iterator<Cell> cellIterator = row.cellIterator();
-//                                                while (cellIterator.hasNext()) {
-//                                                    Cell cell = cellIterator.next();
-//                                                    switch (cell.getCellType()) {
-//                                                        case Cell.CELL_TYPE_STRING:
-//                                                            content = cell.getStringCellValue();
-//                                                            content = content.trim().replace("-", "");
-//                                                            lessonRoom = content.split(" ");
-//                                                            lessonRoom = Arrays.stream(lessonRoom).filter(x -> !x.isEmpty()).toArray(String[]::new);
-//
-//                                                            if (lessonRoom.length == 0) {
-//                                                                lesson = "----------------------";
-//                                                                room = "";
-//                                                            } else if (content.contains("физическая культура")) {
-//                                                                lesson = "физическая культура";
-//                                                                room = "спортзал";
-//                                                            } else if (lessonRoom.length > 1) {
-////                                                lesson = lessonRoom[0];
-////                                                room = lessonRoom[1];
-//                                                                lesson = "";
-//                                                                room = "";
-//                                                                for (int i = 0; i < lessonRoom.length - 1; i++) {
-//                                                                    lesson += lessonRoom[i] + " ";
-//                                                                }
-//                                                                room = lessonRoom[lessonRoom.length - 1];
-//                                                            }
-//
-//                                                            if (content.contains("Расписание")) {
-//                                                                isSchedulePassed = true;
-//                                                            } else if (isSchedulePassed == true) {
-//                                                                // строка с перечнем классов в параллели
-//                                                                colNum++;
-//                                                                Schedule schedule = new Schedule();
-//                                                                String[] gradeLetter = content.split("");
-//                                                                String grade, letter;
-//                                                                if (gradeLetter.length == 2) {
-//                                                                    grade = gradeLetter[0];
-//                                                                    letter = gradeLetter[1];
-//                                                                } else {
-//                                                                    grade = gradeLetter[0] + gradeLetter[1];
-//                                                                    letter = gradeLetter[2];
-//                                                                }
-//                                                                schedule.setGrade(grade);
-//                                                                schedule.setLetter(letter);
-//                                                                schedules.add(schedule);
-//                                                            } else {
-//                                                                if (content.equals("Пятница") && isFriday == false) {
-//                                                                    isFriday = false;
-//                                                                    for (int i = c1; i < c2; i++) {
-//                                                                        Weekdays fridayLessons = new Weekdays();
-//                                                                        fridayLessons.setWeekday("Пятница");
-//                                                                        schedules.get(i).getWeekdays().add(fridayLessons);
-//                                                                    }
-//                                                                    isFriday = true;
-//                                                                } else if (isFriday == true) {
-//                                                                    LessonInfo lessonInfo = new LessonInfo(lesson, room);
-//                                                                    schedules.get(curNum).getWeekdays().get(4).getLessons().add(lessonInfo);
-//                                                                    curNum++;
-//                                                                } else if (content.equals("Четверг") && isThursday == false) {
-//                                                                    isThursday = false;
-//                                                                    for (int i = c1; i < c2; i++) {
-//                                                                        Weekdays thursdayLessons = new Weekdays();
-//                                                                        thursdayLessons.setWeekday("Четверг");
-//                                                                        schedules.get(i).getWeekdays().add(thursdayLessons);
-//                                                                    }
-//                                                                    isThursday = true;
-//                                                                } else if (isThursday == true) {
-//                                                                    LessonInfo lessonInfo = new LessonInfo(lesson, room);
-//                                                                    schedules.get(curNum).getWeekdays().get(3).getLessons().add(lessonInfo);
-//                                                                    curNum++;
-//                                                                } else if (content.equals("Среда") && isWednesday == false) {
-//                                                                    isWednesday = false;
-//                                                                    for (int i = c1; i < c2; i++) {
-//                                                                        Weekdays wednsdayLessons = new Weekdays();
-//                                                                        wednsdayLessons.setWeekday("Среда");
-//                                                                        schedules.get(i).getWeekdays().add(wednsdayLessons);
-//                                                                    }
-//                                                                    isWednesday = true;
-//                                                                } else if (isWednesday == true) {
-//                                                                    LessonInfo lessonInfo = new LessonInfo(lesson, room);
-//                                                                    schedules.get(curNum).getWeekdays().get(2).getLessons().add(lessonInfo);
-//                                                                    curNum++;
-//                                                                } else if (content.equals("Вторник") && isTuesday == false) {
-//                                                                    isTuesday = false;
-//                                                                    for (int i = c1; i < c2; i++) {
-//                                                                        Weekdays tuesdayLessons = new Weekdays();
-//                                                                        tuesdayLessons.setWeekday("Вторник");
-//                                                                        schedules.get(i).getWeekdays().add(tuesdayLessons);
-//                                                                    }
-//                                                                    isTuesday = true;
-//                                                                } else if (isTuesday == true) {
-//                                                                    LessonInfo lessonInfo = new LessonInfo(lesson, room);
-//                                                                    schedules.get(curNum).getWeekdays().get(1).getLessons().add(lessonInfo);
-//                                                                    curNum++;
-//                                                                } else if (content.equals("Понедельник") && isMonday == false) {
-//                                                                    c2 = c1 + colNum;
-//                                                                    for (int i = c1; i < c2; i++) {
-//                                                                        Weekdays mondayLessons = new Weekdays();
-//                                                                        mondayLessons.setWeekday("Понедельник");
-//                                                                        schedules.get(i).getWeekdays().add(mondayLessons);
-//                                                                    }
-//                                                                    isMonday = true;
-//
-//                                                                } else if (isMonday == true) {
-//                                                                    LessonInfo lessonInfo = new LessonInfo(lesson, room);
-//                                                                    schedules.get(curNum).getWeekdays().get(0).getLessons().add(lessonInfo);
-//                                                                    curNum++;
-//                                                                }
-//
-//
-//                                                            }
-//
-//                                                            break;
-//                                                        case Cell.CELL_TYPE_NUMERIC:
-//                                                            content = String.valueOf(cell.getNumericCellValue());
-//                                                            isLessonNum = true;
-//                                                            break;
-//                                                        case Cell.CELL_TYPE_BLANK:
-//                                                            if (isLessonNum == true) {
-//                                                                //emptyLessonNum++;
-//                                                                //curNum = emptyLessonNum;
-//                                                                curNum++;
-//                                                            }
-//                                                    }
-//                                                }
-//                                            }
-//
-//                                            c1 += colNum;
-//                                        }
-//
-//                                        fillCorpusesSpinner();
-//                                        fillWeekdaysSpinner();
-//
-//                                        List<String> grades = new ArrayList<>();
-//
-//                                        List<String> letters = new ArrayList<>();
-//                                        for (Schedule schedule : schedules) {
-//                                            letters.add(schedule.getLetter());
-//                                            grades.add(schedule.getGrade());
-//                                        }
-//                                        // удаляем дубликаты
-//                                        HashSet<String> hashSet = new HashSet<String>();
-//                                        hashSet.addAll(letters);
-//                                        letters.clear();
-//                                        letters.addAll(hashSet);
-//
-//                                        hashSet.clear();
-//                                        hashSet.addAll(grades);
-//                                        grades.clear();
-//                                        grades.addAll(hashSet);
-//                                        spGrade.attachDataSource(grades);
-//
-//                                        //подгрузка букв первого класса
-//                                        List<String> shownLetters = new ArrayList<>();
-//                                        for (Schedule schedule : schedules) {
-//                                            if (schedule.getGrade().equals(grades.get(0))) {
-//                                                shownLetters.add(schedule.getLetter());
-//                                            }
-//                                        }
-//                                        spLetter.attachDataSource(shownLetters);
-//                                        //Обработка подгрузки только существующих данных
-//                                        fillLettersSpinner(schedules);
-//
-//                                        // cache
-//                                        db.saveWeekdays();
-//                                        db.saveClassInfo(schedules);
-//                                        db.saveSubjects(schedules);
-//                                        db.saveSchedule(schedules);
-//                                        // ---------------------
-//
-//                                    } catch (FileNotFoundException e) {
-//                                        e.printStackTrace();
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                                ScheduleByBuilding scheduleByBuilding = new ScheduleByBuilding(info.getBuilding(), schedules);
-//                                scheduleByBuildingList.add(scheduleByBuilding);
-////                                ShowSchedule();
-//                            }
-//                        });
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<AllFiles> call, Throwable t) {
-//                }
-//            });
-
-
 
 
         btnShowSchedule.setOnClickListener(new View.OnClickListener() {
@@ -427,7 +267,7 @@ public class ScheduleFragment extends Fragment {
 //                    ShowCacheSchedule();
 //                }
 //                else{
-                    ShowSchedule();
+                    ShowSchedule("");
 //                }
             }
         });
@@ -435,94 +275,144 @@ public class ScheduleFragment extends Fragment {
         return view;
     }
 
-
-    public void fillLettersSpinner(List<Schedule> schedules){
-        spGrade.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-            @Override
-            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                String selectedGrade = (String) parent.getItemAtPosition(position);
-                List<String> searchedLetters = new ArrayList<>();
-                for (Schedule item : schedules) {
-                    if (item.getGrade().equals(selectedGrade)) {
-                        searchedLetters.add(item.getLetter());
+    private List<String> getLettersByGrade(String selectedGrade, String selectedBuilding, List<ScheduleByBuilding> data) {
+        HashSet<String> letters = new HashSet<>();
+        for (ScheduleByBuilding item: data) {
+            if(item.getBuilding().equals(selectedBuilding)){
+                for (Schedule schedule: item.getScheduleList()) {
+                    if(schedule.getGrade().equals(selectedGrade)){
+                        letters.add(schedule.getLetter());
                     }
                 }
-                spLetter.attachDataSource(searchedLetters);
+                break;
             }
-        });
-    }
-
-    public void fillWeekdaysSpinner(){
-        List<String> weekdays = new ArrayList<>();
-        weekdays.add("Понедельник");
-        weekdays.add("Вторник");
-        weekdays.add("Среда");
-        weekdays.add("Четверг");
-        weekdays.add("Пятница");
-        spWeekday.attachDataSource(weekdays);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        Date d = new Date();
-        String dayOfTheWeek = sdf.format(d);
-
-        switch (dayOfTheWeek) {
-            case "понедельник":
-                spWeekday.setSelectedIndex(0);
-                break;
-            case "вторник":
-                spWeekday.setSelectedIndex(1);
-                break;
-            case "среда":
-                spWeekday.setSelectedIndex(2);
-                break;
-            case "четверг":
-                spWeekday.setSelectedIndex(3);
-                break;
-            case "пятница":
-                spWeekday.setSelectedIndex(4);
-                break;
         }
+        return new ArrayList<>(letters);
     }
 
-    public void fillBuildingsSpinner(List<ScheduleByBuilding> data) {
-        List<String> corpuses = new ArrayList<>();
+    private List<String> getGradesByBuilding(String selectedBuilding, List<ScheduleByBuilding> data) {
+        HashSet<String> grades = new HashSet<>();
         for (ScheduleByBuilding item: data) {
-            corpuses.add(item.getBuilding());
+            if(item.getBuilding().equals(selectedBuilding)){
+                for (Schedule schedule: item.getScheduleList()) {
+                    grades.add(schedule.getGrade());
+                }
+                break;
+            }
         }
+        return new ArrayList<>(grades);
+    }
+
+
+//    public void fillLettersSpinner(List<Schedule> schedules){
+//        spGrade.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+//                String selectedGrade = (String) parent.getItemAtPosition(position);
+//                List<String> searchedLetters = new ArrayList<>();
+//                for (Schedule item : schedules) {
+//                    if (item.getGrade().equals(selectedGrade)) {
+//                        searchedLetters.add(item.getLetter());
+//                    }
+//                }
+//                spLetter.attachDataSource(searchedLetters);
+//            }
+//        });
+//    }
+
+//    public void fillWeekdaysSpinner(){
+//        List<String> weekdays = new ArrayList<>();
+//        weekdays.add("Понедельник");
+//        weekdays.add("Вторник");
+//        weekdays.add("Среда");
+//        weekdays.add("Четверг");
+//        weekdays.add("Пятница");
+//        spWeekday.attachDataSource(weekdays);
+//        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+//        Date d = new Date();
+//        String dayOfTheWeek = sdf.format(d);
+//
+//        switch (dayOfTheWeek) {
+//            case "понедельник":
+//                spWeekday.setSelectedIndex(0);
+//                break;
+//            case "вторник":
+//                spWeekday.setSelectedIndex(1);
+//                break;
+//            case "среда":
+//                spWeekday.setSelectedIndex(2);
+//                break;
+//            case "четверг":
+//                spWeekday.setSelectedIndex(3);
+//                break;
+//            case "пятница":
+//                spWeekday.setSelectedIndex(4);
+//                break;
+//        }
+//    }
+
+//    public void fillBuildingsSpinner(List<ScheduleByBuilding> data) {
+//        List<String> corpuses = new ArrayList<>();
+//        for (ScheduleByBuilding item: data) {
+//            corpuses.add(item.getBuilding());
+//        }
 //        corpuses.add("ш1");
 //        corpuses.add("ш2");
 //        corpuses.add("ш3");
 //        corpuses.add("ш4");
-        spCorpus.attachDataSource(corpuses);
-    }
-    public void ShowCacheSchedule(){
-        String corpus = spCorpus.getSelectedItem().toString();
-        String grade = spGrade.getSelectedItem().toString();
-        String letter = spLetter.getSelectedItem().toString();
-        String weekday = spWeekday.getSelectedItem().toString();
-        out.clear();
-        out.addAll(db.getSchedule(grade, letter, weekday));
-        pb.setVisibility(View.INVISIBLE);
-        adapter.notifyDataSetChanged();
-    }
+//        spCorpus.attachDataSource(corpuses);
+//    }
 
-    public void ShowSchedule()
+//    public void ShowCacheSchedule(){
+//        String corpus = spCorpus.getSelectedItem().toString();
+//        String grade = spGrade.getSelectedItem().toString();
+//        String letter = spLetter.getSelectedItem().toString();
+//        String weekday = spWeekday.getSelectedItem().toString();
+//        out.clear();
+//        out.addAll(db.getSchedule(grade, letter, weekday));
+//        pb.setVisibility(View.INVISIBLE);
+//        adapter.notifyDataSetChanged();
+//    }
+
+    public void ShowSchedule(String mode)
     {
-        String corpus = spCorpus.getSelectedItem().toString();
-        String grade = spGrade.getSelectedItem().toString();
-        String letter = spLetter.getSelectedItem().toString();
-        String weekday = spWeekday.getSelectedItem().toString();
+        String building, grade, letter, weekday;
+        if(mode.equals("remember")){
+            sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
+            building = sharedPreferences.getString("building", "");
+            grade = sharedPreferences.getString("grade", "");
+            letter = sharedPreferences.getString("letter", "");
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE", new Locale("ru"));
+            Date d = new Date();
+            weekday = sdf.format(d);
+
+            spCorpus.setText(building);
+            spGrade.setText(grade);
+            spLetter.setText(letter);
+            spWeekday.setText(weekday.substring(0,1).toUpperCase() + weekday.substring(1));
+        }
+        else {
+            building = spCorpus.getEditableText().toString();
+            grade = spGrade.getEditableText().toString();
+            letter = spLetter.getEditableText().toString();
+            weekday = spWeekday.getEditableText().toString();
+        }
         Boolean isFound=false;
         out.clear();
-
-        for (Schedule item: schedules) {
-            for (Weekdays itemWeekday: item.getWeekdays()) {
-                if(item.getGrade().equals(grade) && item.getLetter().equals(letter) && itemWeekday.getWeekday().equals(weekday)){
-                    out.addAll(itemWeekday.getLessons());
-                    isFound = true;
-                    break;
+        pb.setVisibility(View.VISIBLE);
+        for (ScheduleByBuilding item: scheduleByBuildingList) {
+            if(item.getBuilding().equals(building)){
+                for (Schedule schedule: item.getScheduleList()) {
+                    for (Weekdays itemWeekday: schedule.getWeekdays()) {
+                        if(schedule.getGrade().equals(grade) && schedule.getLetter().equals(letter) && itemWeekday.getWeekday().toLowerCase().equals(weekday.toLowerCase())){
+                            out.addAll(itemWeekday.getLessons());
+                            isFound = true;
+                            break;
+                        }
+                    }
+                    if(isFound == true) break;
                 }
             }
-            if(isFound == true) break;
         }
         pb.setVisibility(View.INVISIBLE);
         adapter.notifyDataSetChanged();
