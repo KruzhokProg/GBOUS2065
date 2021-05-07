@@ -70,7 +70,6 @@ import static com.yandex.runtime.Runtime.getApplicationContext;
 public class ScheduleFragment extends Fragment {
 
     AsyncHttpClient asyncHttpClient;
-//    NiceSpinner spCorpus, spGrade, spLetter, spWeekday;
     AutoCompleteTextView spCorpus, spGrade, spLetter, spWeekday;
     RecyclerView rvSchedule;
     Button btnShowSchedule;
@@ -91,10 +90,6 @@ public class ScheduleFragment extends Fragment {
 
         pb = view.findViewById(R.id.progress_bar_schedule);
         switchRemember = view.findViewById(R.id.switchRemember);
-//        spCorpus = view.findViewById(R.id.spCorpus);
-//        spGrade = view.findViewById(R.id.spGrade);
-//        spLetter = view.findViewById(R.id.spLetter);
-//        spWeekday = view.findViewById(R.id.spWeekday);
         spCorpus = view.findViewById(R.id.actvBuildings);
         spGrade = view.findViewById(R.id.actvGrades);
         spLetter = view.findViewById(R.id.actvLetters);
@@ -149,68 +144,6 @@ public class ScheduleFragment extends Fragment {
             }
         });
 
-//        switchRemember.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(switchRemember.isChecked()){
-//                    switchRemember.setText("Забыть");
-//
-//                    String building = spCorpus.getEditableText().toString();
-//                    String grade = spGrade.getEditableText().toString();
-//                    String letter = spLetter.getEditableText().toString();
-//                    String weekday = spWeekday.getEditableText().toString();
-//
-////                    if(building.isEmpty() || grade.isEmpty() || letter.isEmpty() || weekday.isEmpty()){
-////                        Toast.makeText(getContext(), "Выберите все пункты!", Toast.LENGTH_SHORT).show();
-////                    }
-////                    else{
-//                    sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("building", building);
-//                    editor.putString("grade", grade);
-//                    editor.putString("letter", letter);
-//                    editor.putString("weekday", weekday);
-//                    editor.apply();
-////                    }
-//                }
-//                else{
-//                    switchRemember.setText("Запомнить");
-//
-//                    sharedPreferences = getContext().getSharedPreferences("remember", Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("building", "");
-//                    editor.putString("grade", "");
-//                    editor.putString("letter", "");
-//                    editor.putString("weekday", "");
-//                    editor.apply();
-//                }
-//            }
-//        });
-//        if(db.isScheduleCached())
-//        {
-//            // выгрузка из бд
-//            fillCorpusesSpinner();
-//            fillWeekdaysSpinner();
-//            List<Integer> grades = new ArrayList<Integer>(db.getGrades());
-//            spGrade.attachDataSource(grades);
-//            List<String> existedLetters = new ArrayList<>(db.getLetters(grades.get(0)));
-//            spLetter.attachDataSource(existedLetters);
-//            // обработка выбора класса
-//            spGrade.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-//                    Integer selectedGrade = (Integer) parent.getItemAtPosition(position);
-//                    List<String> searchedLetters = new ArrayList<>(db.getLetters(selectedGrade));
-//                    spLetter.attachDataSource(searchedLetters);
-//                }
-//            });
-//
-//
-//            ShowCacheSchedule();
-//        }
-//        else {
-
-//        ---------------------------
 
         NetworkDownload.getScheduleAndGo(getContext(), new ScheduleCallBack() {
             @Override
@@ -320,76 +253,6 @@ public class ScheduleFragment extends Fragment {
         return new ArrayList<>(grades);
     }
 
-
-//    public void fillLettersSpinner(List<Schedule> schedules){
-//        spGrade.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-//                String selectedGrade = (String) parent.getItemAtPosition(position);
-//                List<String> searchedLetters = new ArrayList<>();
-//                for (Schedule item : schedules) {
-//                    if (item.getGrade().equals(selectedGrade)) {
-//                        searchedLetters.add(item.getLetter());
-//                    }
-//                }
-//                spLetter.attachDataSource(searchedLetters);
-//            }
-//        });
-//    }
-
-//    public void fillWeekdaysSpinner(){
-//        List<String> weekdays = new ArrayList<>();
-//        weekdays.add("Понедельник");
-//        weekdays.add("Вторник");
-//        weekdays.add("Среда");
-//        weekdays.add("Четверг");
-//        weekdays.add("Пятница");
-//        spWeekday.attachDataSource(weekdays);
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-//        Date d = new Date();
-//        String dayOfTheWeek = sdf.format(d);
-//
-//        switch (dayOfTheWeek) {
-//            case "понедельник":
-//                spWeekday.setSelectedIndex(0);
-//                break;
-//            case "вторник":
-//                spWeekday.setSelectedIndex(1);
-//                break;
-//            case "среда":
-//                spWeekday.setSelectedIndex(2);
-//                break;
-//            case "четверг":
-//                spWeekday.setSelectedIndex(3);
-//                break;
-//            case "пятница":
-//                spWeekday.setSelectedIndex(4);
-//                break;
-//        }
-//    }
-
-//    public void fillBuildingsSpinner(List<ScheduleByBuilding> data) {
-//        List<String> corpuses = new ArrayList<>();
-//        for (ScheduleByBuilding item: data) {
-//            corpuses.add(item.getBuilding());
-//        }
-//        corpuses.add("ш1");
-//        corpuses.add("ш2");
-//        corpuses.add("ш3");
-//        corpuses.add("ш4");
-//        spCorpus.attachDataSource(corpuses);
-//    }
-
-//    public void ShowCacheSchedule(){
-//        String corpus = spCorpus.getSelectedItem().toString();
-//        String grade = spGrade.getSelectedItem().toString();
-//        String letter = spLetter.getSelectedItem().toString();
-//        String weekday = spWeekday.getSelectedItem().toString();
-//        out.clear();
-//        out.addAll(db.getSchedule(grade, letter, weekday));
-//        pb.setVisibility(View.INVISIBLE);
-//        adapter.notifyDataSetChanged();
-//    }
 
     public void ShowSchedule(String mode)
     {
