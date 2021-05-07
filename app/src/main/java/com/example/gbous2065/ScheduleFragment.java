@@ -82,6 +82,7 @@ public class ScheduleFragment extends Fragment {
     DataBaseHelper db;
     Switch switchRemember;
     SharedPreferences sharedPreferences;
+    ArrayAdapter adapterGrade, adapterLetter, adapterWeekday, adapterBuilding;
 
     @Nullable
     @Override
@@ -227,15 +228,31 @@ public class ScheduleFragment extends Fragment {
                 weekdays.add("Четверг");
                 weekdays.add("Пятница");
 
-                spCorpus.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, buildings));
+                adapterBuilding = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, buildings);
+                spCorpus.setAdapter(adapterBuilding);
+
+                String firstBuilding = (String) adapterBuilding.getItem(0);
+                if(!sharedPreferences.getString("building", "").isEmpty()){
+                    firstBuilding = sharedPreferences.getString("building", "");
+                }
+
+                adapterGrade = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,getGradesByBuilding(firstBuilding, data));
+                spGrade.setAdapter(adapterGrade);
+
+                String firstGrade = (String)adapterGrade.getItem(0);
+                if(!sharedPreferences.getString("grade", "").isEmpty()){
+                    firstGrade = sharedPreferences.getString("grade", "");
+                }
+
+                adapterLetter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getLettersByGrade(firstGrade, firstBuilding, data));
+                spLetter.setAdapter(adapterLetter);
+
                 spCorpus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String selectedBuilding = (String)parent.getItemAtPosition(position);
-                        ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,getGradesByBuilding(selectedBuilding, data));
-                        spGrade.setAdapter(adapter);
-                        //spGrade.setText((CharSequence) adapter.getItem(0), false);
-                        //spGrade.performClick();
+                        adapterGrade = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,getGradesByBuilding(selectedBuilding, data));
+                        spGrade.setAdapter(adapterGrade);
                     }
                 });
 
@@ -244,13 +261,13 @@ public class ScheduleFragment extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String selectedGrade = (String)parent.getItemAtPosition(position);
                         String selectedBuilding = spCorpus.getEditableText().toString();
-                        ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getLettersByGrade(selectedGrade, selectedBuilding, data));
-                        spLetter.setAdapter(adapter);
-                        spLetter.setText((CharSequence) adapter.getItem(0), false);
+                        adapterLetter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getLettersByGrade(selectedGrade, selectedBuilding, data));
+                        spLetter.setAdapter(adapterLetter);
+                        spLetter.setText((CharSequence) adapterLetter.getItem(0), false);
                     }
                 });
-
-                spWeekday.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, weekdays));
+                adapterWeekday = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, weekdays);
+                spWeekday.setAdapter(adapterWeekday);
 
                 if(!sharedPreferences.getString("building","").isEmpty()){
                     ShowSchedule("remember");
@@ -386,10 +403,15 @@ public class ScheduleFragment extends Fragment {
             Date d = new Date();
             weekday = sdf.format(d);
 
-            spCorpus.setText(building);
-            spGrade.setText(grade);
-            spLetter.setText(letter);
-            spWeekday.setText(weekday.substring(0,1).toUpperCase() + weekday.substring(1));
+            int savedBuildingPos = getAdapterPosition(adapterBuilding, building);
+            int savedGradePos = getAdapterPosition(adapterGrade, grade);
+            int savedLetterPos = getAdapterPosition(adapterLetter, letter);
+            int savedWeekdayPos = getAdapterPosition(adapterWeekday, weekday.substring(0,1).toUpperCase() + weekday.substring(1));
+
+            spCorpus.setText((CharSequence) adapterBuilding.getItem(savedBuildingPos), false);
+            spGrade.setText((CharSequence) adapterGrade.getItem(savedGradePos), false);
+            spLetter.setText((CharSequence) adapterLetter.getItem(savedLetterPos), false);
+            spWeekday.setText((CharSequence) adapterWeekday.getItem(savedWeekdayPos), false);
         }
         else {
             building = spCorpus.getEditableText().toString();
@@ -416,5 +438,16 @@ public class ScheduleFragment extends Fragment {
         }
         pb.setVisibility(View.INVISIBLE);
         adapter.notifyDataSetChanged();
+    }
+
+    public Integer getAdapterPosition(ArrayAdapter adapter, String comparement){
+        int savedPos = 0;
+        for (int i=0; i<adapter.getCount(); i++) {
+            if(((CharSequence) adapter.getItem(i)).equals(comparement)){
+                savedPos = i;
+                break;
+            }
+        }
+        return savedPos;
     }
 }
