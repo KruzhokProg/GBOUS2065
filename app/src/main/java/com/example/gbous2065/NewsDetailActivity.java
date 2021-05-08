@@ -8,16 +8,29 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.gbous2065.Models.News;
 import com.example.gbous2065.Utils.PicassoImageGetter;
+import com.example.gbous2065.Utils.YoutubeConfig;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 
-public class NewsDetailActivity extends AppCompatActivity {
+public class NewsDetailActivity extends YouTubeBaseActivity {
 
     private TextView tvTitleDetail, tvContentDetail, tvDate;
+    private WebView webViewVideo;
+    private YouTubePlayerView youTubePlayerView;
+    YouTubePlayer.OnInitializedListener onInitializedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +50,7 @@ public class NewsDetailActivity extends AppCompatActivity {
         tvTitleDetail = findViewById(R.id.tv_title_detail);
         tvContentDetail = findViewById(R.id.tv_content_detail);
         tvDate = findViewById(R.id.tv_date_detail);
+        youTubePlayerView = findViewById(R.id.youtubePlayer);
 
         tvContentDetail.setMovementMethod(new ScrollingMovementMethod());
         getIncomingIntent();
@@ -64,6 +78,30 @@ public class NewsDetailActivity extends AppCompatActivity {
             String mins = time[1];
             //String time = hours + ":" + mins;
             tvDate.setText(dateMas[0] + "\n" + hours + ":" + mins);
+
+            onInitializedListener = new YouTubePlayer.OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                    Integer startVideoUrlPos = news.getContent().indexOf("www.youtube.com/embed/") + 22;
+                    String startVideoUrl = news.getContent().substring(startVideoUrlPos);
+                    Integer endVideoUrlPos = startVideoUrl.indexOf('"');
+                    String endVideoUrl = startVideoUrl.substring(0, endVideoUrlPos);
+
+                    youTubePlayer.loadVideo(endVideoUrl);
+                }
+
+                @Override
+                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+                }
+            };
+
+            if(news.getContent().contains("youtube")) {
+                youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
+            }
+            else{
+                youTubePlayerView.setVisibility(View.GONE);
+            }
 
         }
     }
