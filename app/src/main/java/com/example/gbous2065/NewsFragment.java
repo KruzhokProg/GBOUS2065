@@ -49,7 +49,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class NewsFragment extends Fragment implements INewsListener, View.OnClickListener {
 
-    private static final int REQUEST_CODE_SPEECH_INPUT = 1234;
+    private final int REQUEST_CODE_SPEECH_INPUT = 1234;
     EditText etSearch;
     NestedScrollView nestedScrollView;
     RecyclerView recyclerView;
@@ -82,7 +82,7 @@ public class NewsFragment extends Fragment implements INewsListener, View.OnClic
         progressBar = view.findViewById(R.id.progress_bar);
         etSearch = view.findViewById(R.id.et_search);
         mic_btn = view.findViewById(R.id.img_btn_record);
-        chooseDateBtn = view.findViewById(R.id.btn_choose_date);
+        chooseDateBtn = view.findViewById(R.id.btn_choose_date_for_menu);
         data = new ArrayList<>();
         filtered_data = new ArrayList<>();
         searchList = new ArrayList<>();
@@ -306,7 +306,7 @@ public class NewsFragment extends Fragment implements INewsListener, View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_choose_date:
+            case R.id.btn_choose_date_for_menu:
                 chooseDate();
                 break;
             case R.id.img_btn_record:

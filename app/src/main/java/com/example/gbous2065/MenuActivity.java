@@ -208,7 +208,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case R.id.nav_food_menu:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MenuFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RedesignedMenuFragment()).commit();
                 toolbar.setTitle("Меню столовой");
                 if(isLoggedIn()) {
                     navigationView.getMenu().findItem(R.id.nav_employee).setChecked(false);

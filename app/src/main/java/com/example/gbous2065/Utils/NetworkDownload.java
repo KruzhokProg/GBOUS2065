@@ -2,6 +2,8 @@ package com.example.gbous2065.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.renderscript.Script;
 import android.util.Log;
 import android.widget.NumberPicker;
@@ -10,12 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.example.gbous2065.AdminAccountFragment;
 import com.example.gbous2065.Models.AdminAccount;
 import com.example.gbous2065.Models.AdminDocHistory;
 import com.example.gbous2065.Models.AllFiles;
 import com.example.gbous2065.Models.CustomCallback;
 import com.example.gbous2065.Models.LessonInfo;
+import com.example.gbous2065.Models.MenuCallback;
 import com.example.gbous2065.Models.Schedule;
 import com.example.gbous2065.Models.ScheduleByBuilding;
 import com.example.gbous2065.Models.ScheduleCallBack;
@@ -30,6 +34,7 @@ import com.example.gbous2065.Network.ApiService;
 import com.example.gbous2065.Network.ApiUserAccountClient;
 import com.example.gbous2065.Network.ApiYandexClient;
 import com.example.gbous2065.R;
+import com.example.gbous2065.RedesignedMenuFragment;
 import com.example.gbous2065.UserAccountFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,8 +58,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,6 +72,7 @@ import java.util.Set;
 
 
 import cz.msebera.android.httpclient.Header;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +81,107 @@ import static com.example.gbous2065.Network.ApiYandexClient.ACCESS_TOKEN;
 
 public class NetworkDownload {
 
+    public static void getMenuAndGo(Context context, String selectedDate, MenuCallback menuCallback){
+
+//        List<com.example.gbous2065.Models.File> menuFiles = new ArrayList<>();
+        ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
+        Call<AllFiles> call = apiService.getAllFiles("OAuth " + ACCESS_TOKEN, 1000);
+        call.enqueue(new Callback<AllFiles>() {
+            @Override
+            public void onResponse(Call<AllFiles> call, Response<AllFiles> response) {
+                AllFiles data = response.body();
+                List<com.example.gbous2065.Models.File> files = data.getItems();
+                com.example.gbous2065.Models.File lastFile = null;
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date lastDate = new Date(), currentDate = null;
+                lastDate.setTime(0);
+
+                for (com.example.gbous2065.Models.File file: files) {
+                    String dir = file.getPath().split("/")[1];
+                    if(dir.equals("Меню")){
+
+                        Integer startPos = file.getName().indexOf(".");
+                        Integer endPos = file.getName().lastIndexOf(".");
+                        String data_file = file.getName().substring(startPos-2,endPos);
+                        data_file = data_file.replace(".", "-");
+                        try {
+                            currentDate = sdf.parse(data_file);
+
+                            if(!selectedDate.equals("")){
+                                if(selectedDate.equals(data_file)){
+                                    lastFile = file;
+                                    break;
+                                }
+                            }
+                            else if(currentDate.compareTo(lastDate) > 0){
+                                lastDate = currentDate;
+                                lastFile = file;
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                            // публикация неопубликованных файлов
+                            if(file.getPublic_url() == null){
+                                String path = file.getPath().split("disk:/")[1];
+                                Call<ResponseBody> callPublish = apiService.publishFile("OAuth " + ACCESS_TOKEN, path);
+                                callPublish.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        //Toast.makeText(getContext(), "файл " + path + " опубликован", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+
+                    }
+                }
+
+                if(lastFile != null) {
+                    String preview = lastFile.getPreview();
+                    String fileDesc = lastFile.getName();
+                    preview = preview.replace("size=S", "size=XXXL");
+
+                    Call<ResponseBody> callPreview = apiService.getPreview("OAuth " + ACCESS_TOKEN, preview);
+                    callPreview.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() != null) {
+                                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+                                    ImageSource imageSource = ImageSource.bitmap(bmp);
+
+                                    menuCallback.onSuccess(imageSource, fileDesc);
+//                                    file.setBmp(bmp);
+//                                    rendered_data.add(file);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.d("error", t.getMessage());
+                        }
+                    });
+                }
+                else{
+//                    Toast.makeText(context, "Нет данных!", Toast.LENGTH_SHORT).show();
+                    menuCallback.onSuccess(null, "");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AllFiles> call, Throwable t) {
+
+            }
+        });
+
+    }
 
     public static void getScheduleAndGo(Context context, ScheduleCallBack scheduleCallBack){
 
