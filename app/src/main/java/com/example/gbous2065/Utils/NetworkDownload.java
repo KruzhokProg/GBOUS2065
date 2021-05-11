@@ -144,6 +144,7 @@ public class NetworkDownload {
                 if(lastFile != null) {
                     String preview = lastFile.getPreview();
                     String fileDesc = lastFile.getName();
+                    String downloadLink = lastFile.getFile_url();
                     preview = preview.replace("size=S", "size=XXXL");
 
                     Call<ResponseBody> callPreview = apiService.getPreview("OAuth " + ACCESS_TOKEN, preview);
@@ -155,7 +156,7 @@ public class NetworkDownload {
                                     Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
                                     ImageSource imageSource = ImageSource.bitmap(bmp);
 
-                                    menuCallback.onSuccess(imageSource, fileDesc);
+                                    menuCallback.onSuccess(imageSource, fileDesc, downloadLink);
 //                                    file.setBmp(bmp);
 //                                    rendered_data.add(file);
                                 }
@@ -170,7 +171,7 @@ public class NetworkDownload {
                 }
                 else{
 //                    Toast.makeText(context, "Нет данных!", Toast.LENGTH_SHORT).show();
-                    menuCallback.onSuccess(null, "");
+                    menuCallback.onSuccess(null, "", "");
                 }
 
             }

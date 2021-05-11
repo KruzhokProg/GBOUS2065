@@ -71,8 +71,8 @@ public class MenuDetail extends AppCompatActivity {
                     public void onResponse(Call<FileDownload> call, Response<FileDownload> response) {
                         FileDownload data = response.body();
                         String href = data.getHref();
-                        Call<ResponseBody> callDonwload = apiService.downloadFile(ACCESS_TOKEN, href);
-                        callDonwload.enqueue(new Callback<ResponseBody>() {
+                        Call<ResponseBody> callDownload = apiService.downloadFile(ACCESS_TOKEN, href);
+                        callDownload.enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 boolean writtenToDisk = writeResponseBodyToDisk(response.body());
