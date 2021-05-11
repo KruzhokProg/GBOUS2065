@@ -214,12 +214,7 @@ public class ScheduleFragment extends Fragment {
         btnShowSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(db.isScheduleCached()) {
-//                    ShowCacheSchedule();
-//                }
-//                else{
                     ShowSchedule("");
-//                }
             }
         });
 
