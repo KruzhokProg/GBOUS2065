@@ -1,5 +1,6 @@
 package com.example.gbous2065;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,6 +37,13 @@ import com.example.gbous2065.Utils.NetworkDownload;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,10 +70,11 @@ import static com.example.gbous2065.Network.ApiYandexClient.ACCESS_TOKEN;
 
 public class RedesignedMenuFragment extends Fragment {
 
-    ProgressBar progress_bar_menu;
+    ProgressBar progress_bar_menu_loading;
     SubsamplingScaleImageView imgvMenuFile;
     TextView tvMenuDesc;
     FloatingActionButton floatingActionButtonChooseDate, floatingActionButtonDownloadMenu;
+    ImageView imgvZoomMenuPreview;
 
     public RedesignedMenuFragment() {
     }
@@ -85,6 +95,8 @@ public class RedesignedMenuFragment extends Fragment {
         tvMenuDesc = view.findViewById(R.id.tvMenuDesc);
         floatingActionButtonChooseDate = view.findViewById(R.id.btn_choose_date_for_menu);
         floatingActionButtonDownloadMenu = view.findViewById(R.id.btn_download_menu);
+        imgvZoomMenuPreview = view.findViewById(R.id.zoomMenuPreview);
+        progress_bar_menu_loading = view.findViewById(R.id.progress_bar_menu_loading);
 
         floatingActionButtonChooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +104,19 @@ public class RedesignedMenuFragment extends Fragment {
                 chooseDate();
             }
         });
-//        progress_bar_menu = view.findViewById(R.id.progress_bar_menu);
+
+        imgvZoomMenuPreview.setOnTouchListener((v, event) -> {
+            v.setVisibility(View.INVISIBLE);
+            return true;
+        });
+
         NetworkDownload.getMenuAndGo(getContext(), "", new MenuCallback() {
             @Override
             public void onSuccess(ImageSource menuPreview, String menuDesc, String downloadLink) {
                 imgvMenuFile.setImage(menuPreview);
                 tvMenuDesc.setText(menuDesc);
-                DownloadFileTest(downloadLink, menuDesc);
+                progress_bar_menu_loading.setVisibility(View.INVISIBLE);
+                DownloadFile(downloadLink, menuDesc);
             }
         });
 
@@ -106,6 +124,7 @@ public class RedesignedMenuFragment extends Fragment {
     }
 
     public void chooseDate() {
+        imgvMenuFile.setVisibility(View.VISIBLE);
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Выберите дату")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
@@ -123,10 +142,11 @@ public class RedesignedMenuFragment extends Fragment {
                         tvMenuDesc.setText("Нет данных");
                     }
                     else {
-                        imgvMenuFile.setVisibility(View.VISIBLE);
+                        progress_bar_menu_loading.setVisibility(View.INVISIBLE);
                         imgvMenuFile.setImage(menuPreview);
                         tvMenuDesc.setText(menuDesc);
-                        DownloadFileTest(downloadLink, menuDesc);
+                        imgvMenuFile.setVisibility(View.VISIBLE);
+                        DownloadFile(downloadLink, menuDesc);
                     }
                 }
             });
@@ -134,125 +154,47 @@ public class RedesignedMenuFragment extends Fragment {
     }
 
 
-    public void DownloadFileTest(String downloadLink, String menuDesc){
-        floatingActionButtonDownloadMenu.setOnClickListener(v -> {
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadLink));
-            request.setTitle(menuDesc);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                request.allowScanningByMediaScanner();
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            }
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, menuDesc);
-            DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-            request.setMimeType("application/pdf");
-            request.allowScanningByMediaScanner();
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-            downloadManager.enqueue(request);
-        });
-    }
-
-    public void DownloadFile(String downloadLink){
-
+    public void DownloadFile(String downloadLink, String menuDesc){
         floatingActionButtonDownloadMenu.setOnClickListener(v -> {
 
-            ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
-            Call<FileDownload> callGetDownloadInfo = apiService.getFileDownloadInfo(ACCESS_TOKEN, downloadLink);
-            callGetDownloadInfo.enqueue(new Callback<FileDownload>() {
-                @Override
-                public void onResponse(Call<FileDownload> call, Response<FileDownload> response) {
-                    FileDownload data = response.body();
-                    String href = data.getHref();
-                    Call<ResponseBody> callDownload = apiService.downloadFile(ACCESS_TOKEN, href);
-                    callDownload.enqueue(new Callback<ResponseBody>() {
+            Dexter.withContext(getContext())
+                    .withPermissions(
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .withListener(new MultiplePermissionsListener() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-
-                            if(writtenToDisk){
-                                Toast.makeText(getContext(), "Файл успешно загружен", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(getContext(), "Ошибка при загрузке", Toast.LENGTH_SHORT).show();
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            if(multiplePermissionsReport.areAllPermissionsGranted()) {
+                                Toast.makeText(getContext(), "Идет загрузка ...", Toast.LENGTH_SHORT).show();
+                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadLink));
+                                request.setTitle(menuDesc);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                    request.allowScanningByMediaScanner();
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                }
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, menuDesc);
+                                DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+                                request.setMimeType("application/pdf");
+                                request.allowScanningByMediaScanner();
+                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                downloadManager.enqueue(request);
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
                         }
-                    });
-
-                }
-
-                private boolean writeResponseBodyToDisk(ResponseBody body) {
-
-                    File futureStudioIconFile = new File( getContext().getExternalFilesDir(null) + File.separator + downloadLink);
-
-                    InputStream inputStream = null;
-                    OutputStream outputStream = null;
-
-
-                    try {
-                        byte[] fileReader = new byte[4096];
-
-                        long fileSize = body.contentLength();
-                        long fileSizeDownloaded = 0;
-                        inputStream = body.byteStream();
-                        outputStream = new FileOutputStream(futureStudioIconFile);
-
-                        while (true) {
-                            int read = inputStream.read(fileReader);
-
-                            if (read == -1) {
-                                break;
-                            }
-
-                            outputStream.write(fileReader, 0, read);
-
-                            fileSizeDownloaded += read;
-
-                            Log.d("donwloading... ", "file download: " + fileSizeDownloaded + " of " + fileSize);
-
-                            Intent pdfViewIntent = new Intent(Intent.ACTION_VIEW);
-                            pdfViewIntent.setDataAndType(Uri.fromFile(futureStudioIconFile),"application/pdf");
-                            pdfViewIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-                            Intent intent = Intent.createChooser(pdfViewIntent, "Open File");
-                            getContext().startActivity(intent);
-                        }
-
-                        outputStream.flush();
-                        return true;
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (inputStream != null) {
-                            try {
-                                inputStream.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        if (outputStream != null) {
-                            try {
-                                outputStream.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    return false;
-                }
-
+                    }).withErrorListener(new PermissionRequestErrorListener() {
                 @Override
-                public void onFailure(Call<FileDownload> call, Throwable t) {
-
+                public void onError(DexterError dexterError) {
+                    Toast.makeText(getContext(), dexterError.toString(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            }).check();
+
         });
+
+
     }
+
 }

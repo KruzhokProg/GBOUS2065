@@ -45,7 +45,7 @@ public class MenuFragment extends Fragment implements IMenuListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_menu_fragment, container, false);
 
-        progress_bar_menu = view.findViewById(R.id.progress_bar_menu);
+        progress_bar_menu = view.findViewById(R.id.progress_bar_menu_loading);
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rvMenu = view.findViewById(R.id.rvMenu);
         menuAdapter = new MenuAdapter(getContext(), this);
