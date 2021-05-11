@@ -82,6 +82,7 @@ public class ScheduleFragment extends Fragment {
     Switch switchRemember;
     SharedPreferences sharedPreferences;
     ArrayAdapter adapterGrade, adapterLetter, adapterWeekday, adapterBuilding;
+//    progress_bar_schedule
 
     @Nullable
     @Override
@@ -144,7 +145,6 @@ public class ScheduleFragment extends Fragment {
             }
         });
 
-
         NetworkDownload.getScheduleAndGo(getContext(), new ScheduleCallBack() {
             @Override
             public void onSuccess(List<ScheduleByBuilding> data) {
@@ -203,6 +203,7 @@ public class ScheduleFragment extends Fragment {
                 spWeekday.setAdapter(adapterWeekday);
 
                 if(!sharedPreferences.getString("building","").isEmpty()){
+                    pb.setVisibility(View.INVISIBLE);
                     ShowSchedule("remember");
                 }
 
@@ -284,7 +285,6 @@ public class ScheduleFragment extends Fragment {
         }
         Boolean isFound=false;
         out.clear();
-        pb.setVisibility(View.VISIBLE);
         for (ScheduleByBuilding item: scheduleByBuildingList) {
             if(item.getBuilding().equals(building)){
                 for (Schedule schedule: item.getScheduleList()) {
@@ -299,7 +299,6 @@ public class ScheduleFragment extends Fragment {
                 }
             }
         }
-        pb.setVisibility(View.INVISIBLE);
         adapter.notifyDataSetChanged();
     }
 
