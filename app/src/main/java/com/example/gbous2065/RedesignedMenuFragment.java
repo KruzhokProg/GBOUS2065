@@ -172,7 +172,7 @@ public class RedesignedMenuFragment extends Fragment {
                                     request.allowScanningByMediaScanner();
                                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                                 }
-                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, menuDesc);
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, menuDesc); //
                                 DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
                                 request.setMimeType("application/pdf");
                                 request.allowScanningByMediaScanner();
@@ -185,6 +185,8 @@ public class RedesignedMenuFragment extends Fragment {
                         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
                             permissionToken.continuePermissionRequest();
                         }
+
+
                     }).withErrorListener(new PermissionRequestErrorListener() {
                 @Override
                 public void onError(DexterError dexterError) {

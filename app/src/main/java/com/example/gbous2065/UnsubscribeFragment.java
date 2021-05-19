@@ -42,7 +42,7 @@ public class UnsubscribeFragment extends Fragment {
 //        newUserDoc.setDateEnd("15-03-2021");
 //        newUserDoc.setStatus("Открытие докумета");
 //        unsubDocs.add(newUserDoc);
-        adapter = new UserDocAdapter(getContext(), unsubDocs);
+        adapter = new UserDocAdapter(getContext(), unsubDocs, "unsub");
         rv.setAdapter(adapter);
         return view;
     }

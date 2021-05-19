@@ -55,7 +55,7 @@ public class AdminAccountFragment extends Fragment {
         etAdminSearch = view.findViewById(R.id.et_admin_search);
         rvUserStatistics = view.findViewById(R.id.rv_admin_data);
         switchMode = view.findViewById(R.id.switchMode);
-        pbLoad = view.findViewById(R.id.progress_bar_admin);
+//        pbLoad = view.findViewById(R.id.progress_bar_admin);
 
         if(!mode.equals("empty")) {
             //data.sort(AdminDocHistory.compareByDate);

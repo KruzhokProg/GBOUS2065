@@ -23,10 +23,12 @@ public class UserDocAdapter extends RecyclerView.Adapter<UserDocViewHolder> {
 
     Context context;
     List<UserDocFragment> data;
+    String mode;
 
-    public UserDocAdapter(Context context, List<UserDocFragment> data) {
+    public UserDocAdapter(Context context, List<UserDocFragment> data, String mode) {
         this.context = context;
         this.data = data;
+        this.mode = mode;
     }
 
     @NonNull
@@ -52,14 +54,16 @@ public class UserDocAdapter extends RecyclerView.Adapter<UserDocViewHolder> {
             }
         }
 
-        holder.imgvSeeDoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context, DisplayDocActivity.class);
-                i.putExtra("docInfo", userDoc);
-                context.startActivity(i);
-            }
-        });
+            holder.imgvSeeDoc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, DisplayDocActivity.class);
+                    i.putExtra("docInfo", userDoc);
+                    i.putExtra("mode", mode);
+                    context.startActivity(i);
+                }
+            });
+
     }
 
     @Override

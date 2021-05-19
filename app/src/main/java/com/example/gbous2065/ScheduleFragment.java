@@ -108,10 +108,12 @@ public class ScheduleFragment extends Fragment {
         if(!sharedPreferences.getString("building","").isEmpty()) {
             switchRemember.setChecked(false);
             switchRemember.setText("Забыть");
+            pb.setVisibility(View.VISIBLE);
         }
         else {
             switchRemember.setChecked(true);
             switchRemember.setText("Запомнить");
+            pb.setVisibility(View.INVISIBLE);
         }
 
         switchRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -202,9 +204,10 @@ public class ScheduleFragment extends Fragment {
                 adapterWeekday = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, weekdays);
                 spWeekday.setAdapter(adapterWeekday);
 
+
                 if(!sharedPreferences.getString("building","").isEmpty()){
-                    pb.setVisibility(View.INVISIBLE);
                     ShowSchedule("remember");
+                    pb.setVisibility(View.INVISIBLE);
                 }
 
             }

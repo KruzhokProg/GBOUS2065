@@ -44,14 +44,14 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(loadState()){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            setTheme(R.style.DarkTheme_GBOUS2065);
-        }
-        else{
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            setTheme(R.style.Theme_GBOUS2065);
-        }
+//        if(loadState()){
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//            setTheme(R.style.DarkTheme_GBOUS2065);
+//        }
+//        else{
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//            setTheme(R.style.Theme_GBOUS2065);
+//        }
 
         sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE);
         savedLogin = sharedPref.getString("login", "");
@@ -139,9 +139,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
 
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() { }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

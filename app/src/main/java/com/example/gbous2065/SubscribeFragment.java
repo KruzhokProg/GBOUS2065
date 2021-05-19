@@ -45,7 +45,7 @@ public class SubscribeFragment extends Fragment {
 //        newUserDoc.setDateEnd("10-03-2021");
 //        newUserDoc.setStatus("Подписание документа");
 //        subDocs.add(newUserDoc);
-        adapter = new UserDocAdapter(getContext(), subDocs);
+        adapter = new UserDocAdapter(getContext(), subDocs, "sub");
         rv.setAdapter(adapter);
         return view;
     }

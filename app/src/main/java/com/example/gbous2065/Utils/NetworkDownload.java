@@ -39,6 +39,7 @@ import com.example.gbous2065.UserAccountFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +84,6 @@ public class NetworkDownload {
 
     public static void getMenuAndGo(Context context, String selectedDate, MenuCallback menuCallback){
 
-//        List<com.example.gbous2065.Models.File> menuFiles = new ArrayList<>();
         ApiService apiService = ApiYandexClient.getClient().create(ApiService.class);
         Call<AllFiles> call = apiService.getAllFiles("OAuth " + ACCESS_TOKEN, 1000);
         call.enqueue(new Callback<AllFiles>() {
@@ -454,7 +454,6 @@ public class NetworkDownload {
             public void onFailure(Call<AllFiles> call, Throwable t) {
             }
         });
-
     }
 
     public static void getDataAndGo(Context context, FragmentManager fragmentManager, NavigationView navigationView, String mode,

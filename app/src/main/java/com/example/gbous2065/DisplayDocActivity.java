@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class DisplayDocActivity extends AppCompatActivity {
     private BiometricPrompt.PromptInfo promptInfo;
     UserDocFragment userDoc;
     SharedPreferences sharedPref;
+    String mode;
+    Button btnSubDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,15 @@ public class DisplayDocActivity extends AppCompatActivity {
         pdfView = findViewById(R.id.pdfViewer);
         asyncHttpClient = new AsyncHttpClient();
         userDoc = (UserDocFragment)getIntent().getExtras().getParcelable("docInfo");
+        mode = getIntent().getExtras().getString("mode");
+        btnSubDoc = findViewById(R.id.btnSubDoc);
+
+        if (mode.equals("sub")){
+            btnSubDoc.setVisibility(View.INVISIBLE);
+        }
+        else{
+            btnSubDoc.setVisibility(View.VISIBLE);
+        }
 
         executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
